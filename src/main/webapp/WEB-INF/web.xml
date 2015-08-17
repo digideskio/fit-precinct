@@ -5,7 +5,7 @@
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>de.konqi.fitapi.rest.OpenFitApi</param-value>
+            <param-value>de.konqi.fitapi.rest.openfitapi.OpenFitApi</param-value>
         </init-param>
 
         <!-- Enable Tracing support. -->
@@ -21,4 +21,13 @@
         <servlet-name>jersey-serlvet</servlet-name>
         <url-pattern>/openfitapi/api/*</url-pattern>
     </servlet-mapping>
+
+    <filter>
+        <filter-name>ObjectifyFilter</filter-name>
+        <filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ObjectifyFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>
