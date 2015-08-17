@@ -13,7 +13,7 @@ Once that skeleton app is done the aim is to put in an authentication handler an
 After that ...
 
  - Specify and implement an API for sharing data
- - allow sharing of data between instances of this app like <username>@<appinstancename>.appspot.com
+ - allow sharing of data between instances of this app like `<username>@<appinstancename>.appspot.com`
  - create a better API and specification than openfitapi
  - user customizable charts
  - your idea?
