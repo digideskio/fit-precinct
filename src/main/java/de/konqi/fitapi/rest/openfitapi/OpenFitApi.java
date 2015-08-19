@@ -1,5 +1,6 @@
 package de.konqi.fitapi.rest.openfitapi;
 
+import de.konqi.fitapi.rest.openfitapi.filter.AuthorizationRequestFilter;
 import de.konqi.fitapi.rest.openfitapi.resources.FitnessActivities;
 import de.konqi.fitapi.rest.openfitapi.resources.User;
 import org.glassfish.jersey.filter.LoggingFilter;
@@ -17,6 +18,7 @@ public class OpenFitApi extends ResourceConfig {
     private static final Logger LOGGER = Logger.getLogger(OpenFitApi.class.getName());
 
     public OpenFitApi() {
+        register(AuthorizationRequestFilter.class);
         register(FitnessActivities.class);
         register(User.class);
         

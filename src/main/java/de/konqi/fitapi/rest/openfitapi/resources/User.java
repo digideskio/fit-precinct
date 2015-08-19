@@ -6,6 +6,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 /**
@@ -20,8 +21,9 @@ public class User {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setSessionName("blafoo");
         loginResponse.setSessionId("foobla");
-        
-        return Response.ok().entity(loginResponse).build();
+
+        NewCookie newCookie = new NewCookie(loginResponse.getSessionName(), loginResponse.getSessionId());
+        return Response.ok().entity(loginResponse).cookie(newCookie).build();
     } 
     
 }

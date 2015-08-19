@@ -18,7 +18,7 @@ public class FitnessActivities {
     @GET
     @Path("/fitnessActivities/{itemId}{a:|.json}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getWorkout(@PathParam("itemId") Long itemId) {
+    public Response getWorkout(@PathParam("itemId") Long itemId, @Context SecurityContext sc) {
         logger.info("GET " + itemId);
 
         ObjectNode rootNode = ResourceUtils.loadWorkout(itemId);
@@ -29,7 +29,7 @@ public class FitnessActivities {
     @POST
     @Path("/fitnessActivities{a:|.json}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addWorkout(Workout workout, @Context UriInfo uriInfo) {
+    public Response addWorkout(Workout workout, @Context UriInfo uriInfo, @Context SecurityContext sc) {
         Long workoutId = ResourceUtils.storeWorkout(workout);
 
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().path("/fitnessActivities/{itemId}.json");
@@ -43,7 +43,7 @@ public class FitnessActivities {
 
     @GET
     @Path("/fitnessActivities{a:|.json}")
-    public Response getWorkoutList() {
+    public Response getWorkoutList(@Context SecurityContext sc) {
         WorkoutList workoutList = new WorkoutList();
 
         return Response.ok().entity(workoutList).build();
@@ -52,7 +52,7 @@ public class FitnessActivities {
     @PUT
     @Path("/fitnessActivities/{itemId}{a:|.json}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateWorkout(@PathParam("itemId") String itemId, Workout workout) {
+    public Response updateWorkout(@PathParam("itemId") String itemId, Workout workout, @Context SecurityContext sc) {
         // returns String ??
         return Response.ok().build();
     }
