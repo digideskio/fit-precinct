@@ -1,7 +1,7 @@
 package de.konqi.fitapi.rest.openfitapi.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.konqi.fitapi.db.Lap;
+import de.konqi.fitapi.db.domain.Lap;
 
 import java.util.Date;
 

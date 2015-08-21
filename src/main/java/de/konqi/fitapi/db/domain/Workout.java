@@ -1,4 +1,4 @@
-package de.konqi.fitapi.db;
+package de.konqi.fitapi.db.domain;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;

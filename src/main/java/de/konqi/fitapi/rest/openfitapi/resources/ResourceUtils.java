@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.primitives.Longs;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import de.konqi.fitapi.db.DataSet;
+import de.konqi.fitapi.db.domain.DataSet;
 import de.konqi.fitapi.db.OfyService;
-import de.konqi.fitapi.db.WorkoutData;
+import de.konqi.fitapi.db.domain.WorkoutData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,7 @@ public class ResourceUtils {
         JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
         ObjectNode rootNode = nodeFactory.objectNode();
 
-        List<Object> dbWorkoutData = OfyService.ofy().load().ancestor(Key.create(de.konqi.fitapi.db.Workout.class, itemId)).list();
+        List<Object> dbWorkoutData = OfyService.ofy().load().ancestor(Key.create(de.konqi.fitapi.db.domain.Workout.class, itemId)).list();
         logger.info("Retrieved " + dbWorkoutData.size() + " entries from the database");
         Map<String, List<DataSet>> datasets = new HashMap<>();
 
@@ -41,8 +41,8 @@ public class ResourceUtils {
                 } else {
                     datasets.put(workoutData.getType(), workoutData.getDataSet());
                 }
-            } else if (entity instanceof de.konqi.fitapi.db.Workout) {
-                de.konqi.fitapi.db.Workout workout = (de.konqi.fitapi.db.Workout) entity;
+            } else if (entity instanceof de.konqi.fitapi.db.domain.Workout) {
+                de.konqi.fitapi.db.domain.Workout workout = (de.konqi.fitapi.db.domain.Workout) entity;
                 logger.info("Adding workout data.");
 
                 rootNode.put("name", workout.getName());
@@ -104,8 +104,8 @@ public class ResourceUtils {
     public static Long storeWorkout(Workout workout) {
         Stack<Object> workoutDataToAdd = new Stack<>();
 
-        Key<de.konqi.fitapi.db.Workout> workoutKey = OfyService.factory().allocateId(de.konqi.fitapi.db.Workout.class);
-        de.konqi.fitapi.db.Workout dbWorkout = new de.konqi.fitapi.db.Workout();
+        Key<de.konqi.fitapi.db.domain.Workout> workoutKey = OfyService.factory().allocateId(de.konqi.fitapi.db.domain.Workout.class);
+        de.konqi.fitapi.db.domain.Workout dbWorkout = new de.konqi.fitapi.db.domain.Workout();
         dbWorkout.setId(workoutKey.getId());
 
         dbWorkout.setName(workout.getName());
@@ -143,7 +143,7 @@ public class ResourceUtils {
         return workoutKey.getId();
     }
 
-    public static List<WorkoutData> getWorkoutLocation(Key<de.konqi.fitapi.db.Workout> workoutKey, Workout workout) {
+    public static List<WorkoutData> getWorkoutLocation(Key<de.konqi.fitapi.db.domain.Workout> workoutKey, Workout workout) {
         List<WorkoutData> datapkg = new ArrayList<>();
         if (workout.getLocation() != null) {
             List<DataSet> datasets = new ArrayList<>(MAX_SETS);
@@ -172,7 +172,7 @@ public class ResourceUtils {
         return datapkg;
     }
 
-    public static List<WorkoutData> getWorkoutData(Key<de.konqi.fitapi.db.Workout> workoutKey, String[] data, String dataName) {
+    public static List<WorkoutData> getWorkoutData(Key<de.konqi.fitapi.db.domain.Workout> workoutKey, String[] data, String dataName) {
         List<WorkoutData> datapkg = new ArrayList<>();
         if (data != null) {
             List<DataSet> datasets = new ArrayList<>(MAX_SETS);

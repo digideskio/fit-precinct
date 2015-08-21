@@ -1,4 +1,4 @@
-package de.konqi.fitapi.db;
+package de.konqi.fitapi.db.domain;
 
 /**
  * Created by konqi on 16.08.2015.

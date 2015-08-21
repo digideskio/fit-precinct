@@ -78,6 +78,12 @@
 
         <!-- Test Dependencies -->
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20141113</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-testing</artifactId>
             <version>${appengine.version}</version>
@@ -130,6 +136,11 @@
                             <directory>${basedir}/src/main/webapp/WEB-INF</directory>
                             <filtering>true</filtering>
                             <targetPath>WEB-INF</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>${basedir}/src/main/node/dist</directory>
+                            <filtering>false</filtering>
+                            <targetPath>/</targetPath>
                         </resource>
                     </webResources>
                 </configuration>

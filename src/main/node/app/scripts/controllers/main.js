@@ -8,10 +8,12 @@
  * Controller of the nodeApp
  */
 angular.module('nodeApp')
-  .controller('MainCtrl', function ($scope) {
+  .controller('MainCtrl', ['$scope', 'userService', function ($scope, userService) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
-  });
+
+    userService.me();
+  }]);

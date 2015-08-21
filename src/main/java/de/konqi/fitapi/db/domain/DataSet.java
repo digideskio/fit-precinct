@@ -1,4 +1,4 @@
-package de.konqi.fitapi.db;
+package de.konqi.fitapi.db.domain;
 
 import java.io.Serializable;
 

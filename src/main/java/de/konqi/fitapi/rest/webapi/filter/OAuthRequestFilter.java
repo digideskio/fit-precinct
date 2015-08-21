@@ -1,10 +1,6 @@
 package de.konqi.fitapi.rest.webapi.filter;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import de.konqi.fitapi.Constants;
-import de.konqi.fitapi.auth.GoogleTokenChecker;
-import de.konqi.fitapi.common.GenericResponse;
-import de.konqi.fitapi.rest.openfitapi.OpenFitApiUser;
+import de.konqi.fitapi.common.Principal;
 import de.konqi.fitapi.rest.webapi.WebApiUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +10,6 @@ import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Scanner;
 
 /**
  * Created by konqi on 16.08.2015.
@@ -28,26 +21,30 @@ public class OAuthRequestFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
         String authorization = containerRequestContext.getHeaderString("Authorization");
-        GoogleTokenChecker googleTokenChecker = new GoogleTokenChecker("", Constants.CLIENT_IDS);
-        GenericResponse<GoogleIdToken.Payload> payload = googleTokenChecker.check(authorization);
-        if(payload.isSuccess()){
-            payload.getValue();
+//        if (authorization != null)
+        {
 
-            // TODO load principal for payload
-
-            // Create security context for principal
+//            GoogleIdTokenVerifier googleTokenChecker = new GoogleIdTokenVerifier("", Collections.singletonList(Constants.CLIENT_ID));
+//            GenericResponse<GoogleIdToken.Payload> payload = googleTokenChecker.check(authorization);
+//            if (payload.isSuccess()) {
+//                payload.getValue();
+//
+//                // TODO load principal for payload
+//
+//                // Create security context for principal
             WebApiUser webApiUser = new WebApiUser();
-            // TODO Set principal in context
-            // webApiUser.
-
-            // Set security context into request
+//                // TODO Set principal in context
+//                // webApiUser.
+//
+//                // Set security context into request
             containerRequestContext.setSecurityContext(webApiUser);
-        }
+//            }
 
-        // TODO Defer to login
+            // TODO Defer to login
+        }
     }
 
-//    private void foo(){
+//    private void getLoginUser(){
 //    // Create a state token to prevent request forgery.
 //    // Store it in the session for later validation.
 //    String state = new BigInteger(130, new SecureRandom()).toString(32);
