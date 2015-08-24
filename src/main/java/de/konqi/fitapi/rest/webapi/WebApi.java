@@ -7,6 +7,8 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.glassfish.jersey.server.mvc.MvcFeature;
+import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
 
 import javax.ws.rs.ApplicationPath;
 import java.util.logging.Logger;
@@ -20,6 +22,12 @@ public class WebApi extends ResourceConfig {
 
     public WebApi() {
         register(RolesAllowedDynamicFeature.class);
+
+//        property(MvcFeature.TEMPLATE_BASE_PATH, "/WEB-INF/jsp");
+//        register(MvcFeature.class);
+        property(JspMvcFeature.TEMPLATE_BASE_PATH, "/WEB-INF/jsp");
+        register(JspMvcFeature.class);
+
         register(OAuthRequestFilter.class);
         register(XOriginFilter.class);
         register(User.class);
@@ -28,6 +36,6 @@ public class WebApi extends ResourceConfig {
         register(new LoggingFilter(LOGGER, true));
 
         // Enable Tracing support.
-        property(ServerProperties.TRACING, "ALL");
+        // property(ServerProperties.TRACING, "ALL");
     }
 }

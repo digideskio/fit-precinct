@@ -1,7 +1,9 @@
 package de.konqi.fitapi.db.domain;
 
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +16,9 @@ import java.util.Map;
 public class Workout {
     @Id
     private Long id = null;
+
+    @Index
+    private Ref<User> user;
 
     Date startTime;
     String type;
@@ -76,5 +81,13 @@ public class Workout {
 
     public void setData(Map<String, Double> data) {
         this.data = data;
+    }
+
+    public Ref<User> getUser() {
+        return user;
+    }
+
+    public void setUser(Ref<User> user) {
+        this.user = user;
     }
 }

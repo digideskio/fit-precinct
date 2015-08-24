@@ -1,11 +1,15 @@
 package de.konqi.fitapi.rest.webapi.resource;
 
-import com.googlecode.objectify.Ref;
 import de.konqi.fitapi.Constants;
 import de.konqi.fitapi.Utils;
 import de.konqi.fitapi.auth.*;
 import de.konqi.fitapi.db.repository.OAuthLoginRepository;
+import de.konqi.fitapi.db.repository.SessionRepository;
+import de.konqi.fitapi.db.repository.UserRepository;
 import de.konqi.fitapi.rest.openfitapi.resources.Credential;
+import de.konqi.fitapi.rest.webapi.WebApiUser;
+import de.konqi.fitapi.rest.webapi.domain.LoginCallbackResponse;
+import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +18,10 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -22,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.security.Principal;
+import java.util.Map;
 
 /**
  * Created by konqi on 19.08.2015.
@@ -40,6 +48,18 @@ public class User {
         // .entity()
         Principal userPrincipal = sc.getUserPrincipal();
         return Response.ok().build();
+    }
+
+    @PUT
+    @RolesAllowed("user")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/uploadpw")
+    public Response setUploadPassword(Map<String, String> params, @Context SecurityContext sc) {
+        WebApiUser webApiUser = (WebApiUser) sc.getUserPrincipal();
+        String password = params.get("password");
+        logger.info("New password is: " + password);
+        UserRepository.setUploadPassword(webApiUser, password);
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @GET
@@ -94,7 +114,7 @@ public class User {
 
             try {
                 URL url = new URL(builder.getBase());
-                HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setDoInput(true);
                 urlConnection.setRequestMethod("POST");
@@ -103,15 +123,21 @@ public class User {
                 bufferedWriter.write(tokenRequestUrl);
                 bufferedWriter.close();
 
-                if(urlConnection.getResponseCode() < 300) {
+                if (urlConnection.getResponseCode() < 300) {
                     TokenResponse tokenResponse = Utils.jacksonObjectMapper.readValue(urlConnection.getInputStream(), TokenResponse.class);
                     IdClaim idClaim = TokenVerifierFacade.verify(type, tokenResponse.getIdToken());
-                    if(idClaim == null) return Response.status(Response.Status.UNAUTHORIZED).build();
+                    if (idClaim == null) return Response.status(Response.Status.UNAUTHORIZED).build();
+                    // FIXME tokenResponse.g
 
                     de.konqi.fitapi.db.domain.User user = OAuthLoginRepository.createUser(idClaim.getIsssuer(), idClaim.getSubscriber());
+                    String sessionId = SessionRepository.createSession(user);
                     // Ref<de.konqi.fitapi.db.domain.User> userRef = OAuthLoginRepository.getLoginUser(idClaim.getIsssuer(), idClaim.getSubscriber());
 
-                    return Response.seeOther(URI.create("/")).cookie(new NewCookie("", "")).build(); // .header("","")
+                    // int maxAge = 60 * 60 * 24 * 7;
+                    // NewCookie newCookie = new NewCookie("session", sessionId, "/web/api", request.getServerName(), null, maxAge, false);
+                    LoginCallbackResponse loginCallbackResponse = new LoginCallbackResponse();
+                    loginCallbackResponse.setSessionId(sessionId);
+                    return Response.ok(new Viewable("/OAuth2ReturnServlet.jsp", loginCallbackResponse)).build();
                 }
             } catch (IOException e) {
                 logger.warn("Unable to exchange code for id_token.", e);
@@ -120,5 +146,7 @@ public class User {
 
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
+
+
 
 }

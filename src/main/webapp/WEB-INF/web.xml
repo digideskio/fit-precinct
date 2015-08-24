@@ -12,7 +12,7 @@
         <!-- Enable Tracing support. -->
         <init-param>
             <param-name>jersey.config.server.tracing</param-name>
-            <param-value>ALL</param-value>
+            <param-value>ON_DEMAND</param-value>
         </init-param>
 
         <load-on-startup>2</load-on-startup>
@@ -25,16 +25,14 @@
             <param-name>javax.ws.rs.Application</param-name>
             <param-value>de.konqi.fitapi.rest.webapi.WebApi</param-value>
         </init-param>
-
         <!-- Enable Tracing support. -->
-        <init-param>
-            <param-name>jersey.config.server.tracing</param-name>
-            <param-value>ALL</param-value>
-        </init-param>
+        <!--<init-param>-->
+            <!--<param-name>jersey.config.server.tracing</param-name>-->
+            <!--<param-value>ALL</param-value>-->
+        <!--</init-param>-->
 
         <load-on-startup>1</load-on-startup>
     </servlet>
-
 
     <servlet-mapping>
         <servlet-name>openfitapi-serlvet</servlet-name>
@@ -45,6 +43,11 @@
         <servlet-name>webapi-serlvet</servlet-name>
         <url-pattern>/web/api/*</url-pattern>
     </servlet-mapping>
+
+    <!-- <filter-mapping>
+        <filter-name>webapi-serlvet</filter-name>
+        <url-pattern>/web/api/*</url-pattern>
+    </filter-mapping> -->
 
     <filter>
         <filter-name>ObjectifyFilter</filter-name>

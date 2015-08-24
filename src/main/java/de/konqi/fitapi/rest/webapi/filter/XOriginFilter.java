@@ -14,6 +14,7 @@ import java.io.IOException;
 public class XOriginFilter implements ContainerResponseFilter {
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-        responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
+        responseContext.getHeaders().add("Access-Control-Allow-Origin", "*"); // "http://localhost:9000, http://localhost:8080"
+        responseContext.getHeaders().add("Access-Control-Allow-Headers", "Session");
     }
 }
