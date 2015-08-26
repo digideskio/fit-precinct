@@ -19,10 +19,11 @@ angular.module('nodeApp')
     var receiveMessage = function(event) {
       // check event origin
       var originUrl = new URL(event.origin);
-      console.log(originUrl, window.location);
       if (originUrl.protocol !== window.location.protocol || originUrl.hostname !== window.location.hostname) {
         return;
       }
+
+      console.log(originUrl, window.location);
 
       // read response data
       var data = angular.fromJson(event.data);
@@ -44,7 +45,7 @@ angular.module('nodeApp')
     return {
       'me': function() {
         var deferred = $q.defer();
-        $http.get(baseUri + '/me', {'headers': {'Session': sessionId}}).then(function(result) {
+        $http.get(baseUri + '/me', {'withCredentials': true}).then(function(result) {
           deferred.resolve(result);
         }, function(error) {
           deferred.reject(error);

@@ -42,5 +42,6 @@ window.addEventListener("message", receiveMessage, false);
 </script>
 </head>
 <body>
+This window should close in a few seconds. If it doesn't please close this window and reload the main page.
 </body>
 </html>

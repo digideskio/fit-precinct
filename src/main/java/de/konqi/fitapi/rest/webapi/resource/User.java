@@ -18,10 +18,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -133,11 +130,12 @@ public class User {
                     String sessionId = SessionRepository.createSession(user);
                     // Ref<de.konqi.fitapi.db.domain.User> userRef = OAuthLoginRepository.getLoginUser(idClaim.getIsssuer(), idClaim.getSubscriber());
 
-                    // int maxAge = 60 * 60 * 24 * 7;
-                    // NewCookie newCookie = new NewCookie("session", sessionId, "/web/api", request.getServerName(), null, maxAge, false);
+                    int maxAge = 60 * 60 * 24 * 7;
+                    // Cookie superkeks = new Cookie("superkeks", sessionId, "/web/api/", "localhost");
+                    NewCookie newCookie = new NewCookie("session", sessionId, "/", null, null, maxAge, false);
                     LoginCallbackResponse loginCallbackResponse = new LoginCallbackResponse();
                     loginCallbackResponse.setSessionId(sessionId);
-                    return Response.ok(new Viewable("/OAuth2ReturnServlet.jsp", loginCallbackResponse)).build();
+                    return Response.ok(new Viewable("/OAuth2ReturnServlet.jsp", loginCallbackResponse)).cookie(newCookie).build();
                 }
             } catch (IOException e) {
                 logger.warn("Unable to exchange code for id_token.", e);

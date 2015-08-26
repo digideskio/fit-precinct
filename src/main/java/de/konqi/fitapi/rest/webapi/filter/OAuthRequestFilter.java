@@ -23,12 +23,14 @@ public class OAuthRequestFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
-        String sessionId = containerRequestContext.getHeaderString("Session");
-        // String authorization = containerRequestContext.getHeaderString("Authorization");
-        if (sessionId != null)
-        {
-            User user = SessionRepository.getSession(sessionId);
-            if(user != null) {
+        // String sessionId = containerRequestContext.getHeaderString("Session");
+        Cookie sessionCookie = containerRequestContext.getCookies().get("session");
+        if (sessionCookie != null) {
+            String sessionId = sessionCookie.getValue();
+            // String authorization = containerRequestContext.getHeaderString("Authorization");
+            if (sessionId != null) {
+                User user = SessionRepository.getSession(sessionId);
+                if (user != null) {
 
 //            GoogleIdTokenVerifier googleTokenChecker = new GoogleIdTokenVerifier("", Collections.singletonList(Constants.CLIENT_ID));
 //            GenericResponse<GoogleIdToken.Payload> payload = googleTokenChecker.check(authorization);
@@ -38,15 +40,16 @@ public class OAuthRequestFilter implements ContainerRequestFilter {
 //                // TODO load principal for payload
 //
 //                // Create security context for principal
-                WebApiUser webApiUser = new WebApiUser(user);
+                    WebApiUser webApiUser = new WebApiUser(user);
 //                // TODO Set principal in context
 //                // webApiUser.
 //
 //                // Set security context into request
-                containerRequestContext.setSecurityContext(webApiUser);
+                    containerRequestContext.setSecurityContext(webApiUser);
 //            }
 
-                // TODO Defer to login
+                    // TODO Defer to login
+                }
             }
         }
     }
