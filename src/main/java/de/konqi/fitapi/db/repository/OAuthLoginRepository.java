@@ -22,7 +22,7 @@ public class OAuthLoginRepository {
         return null;
     }
 
-    public static User createUser(final String issuer, final String subscriber){
+    public static User createUser(final String issuer, final String subscriber, final String email){
         return OfyService.ofy().transact(new Work<User>() {
             @Override
             public User run() {
@@ -37,6 +37,7 @@ public class OAuthLoginRepository {
 
                     User user = new User();
                     user.setId(oAuthLogin.getUser().getKey().getId());
+                    user.setEmail(email);
 
                     OfyService.ofy().save().entities(oAuthLogin, user).now();
                     return user;

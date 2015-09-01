@@ -1,5 +1,6 @@
 package de.konqi.fitapi.rest.webapi;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.konqi.fitapi.db.domain.User;
 
 import javax.ws.rs.core.SecurityContext;
@@ -25,6 +26,7 @@ public class WebApiUser extends de.konqi.fitapi.common.Principal implements Secu
         super(user);
     }
 
+    @JsonIgnore
     @Override
     public Principal getUserPrincipal() {
         return this;
@@ -32,15 +34,18 @@ public class WebApiUser extends de.konqi.fitapi.common.Principal implements Secu
 
     @Override
     public boolean isUserInRole(String role) {
+        // FIXME Need more complex logic to determine role membership
         de.konqi.fitapi.common.Principal userPrincipal = (de.konqi.fitapi.common.Principal) getUserPrincipal();
         return userPrincipal != null && (role.equals("user") || userPrincipal.getRoles().contains(role));
     }
 
+    @JsonIgnore
     @Override
     public boolean isSecure() {
         return false;
     }
 
+    @JsonIgnore
     @Override
     public String getAuthenticationScheme() {
         return null;

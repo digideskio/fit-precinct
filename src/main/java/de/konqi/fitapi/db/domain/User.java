@@ -1,7 +1,9 @@
 package de.konqi.fitapi.db.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,6 @@ public class User implements java.security.Principal {
     private String name;
     private String email;
     private List<String> roles = new ArrayList<>();
-    private String uploadPassword;
 
     public User(User user) {
         this.id = user.id;
@@ -60,13 +61,5 @@ public class User implements java.security.Principal {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setUploadPassword(String uploadPassword) {
-        this.uploadPassword = uploadPassword;
-    }
-
-    public String getUploadPassword() {
-        return uploadPassword;
     }
 }

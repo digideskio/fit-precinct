@@ -7,9 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.primitives.Longs;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import de.konqi.fitapi.db.domain.DataSet;
+import de.konqi.fitapi.db.domain.*;
 import de.konqi.fitapi.db.OfyService;
-import de.konqi.fitapi.db.domain.WorkoutData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +20,19 @@ import java.util.*;
 public class ResourceUtils {
     private static final Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
 
-    private static final int MAX_SETS = 1000;
+    private static final int MAX_SETS = 100000;
 
-    public static ObjectNode loadWorkout(Long itemId) {
+    /**
+     * load specific workout of a user
+     * @param itemId
+     * @param user
+     * @return
+     */
+    public static ObjectNode loadWorkout(Long itemId, de.konqi.fitapi.db.domain.User user) {
         JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
         ObjectNode rootNode = nodeFactory.objectNode();
 
-        List<Object> dbWorkoutData = OfyService.ofy().load().ancestor(Key.create(de.konqi.fitapi.db.domain.Workout.class, itemId)).list();
+        List<Object> dbWorkoutData = OfyService.ofy().load().ancestor(Key.create(Key.create(user), de.konqi.fitapi.db.domain.Workout.class, itemId)).list();
         logger.info("Retrieved " + dbWorkoutData.size() + " entries from the database");
         Map<String, List<DataSet>> datasets = new HashMap<>();
 
@@ -101,11 +106,19 @@ public class ResourceUtils {
         return rootNode;
     }
 
-    public static Long storeWorkout(Workout workout) {
+    /**
+     * Store workout data for user
+     *
+     * @param workout
+     * @param user
+     * @return
+     */
+    public static Long storeWorkout(Workout workout, de.konqi.fitapi.db.domain.User user) {
         Stack<Object> workoutDataToAdd = new Stack<>();
 
         Key<de.konqi.fitapi.db.domain.Workout> workoutKey = OfyService.factory().allocateId(de.konqi.fitapi.db.domain.Workout.class);
         de.konqi.fitapi.db.domain.Workout dbWorkout = new de.konqi.fitapi.db.domain.Workout();
+        dbWorkout.setUser(Ref.create(user));
         dbWorkout.setId(workoutKey.getId());
 
         dbWorkout.setName(workout.getName());

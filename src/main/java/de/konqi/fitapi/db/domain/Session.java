@@ -4,6 +4,7 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * Created by konqi on 23.08.2015.
@@ -14,6 +15,7 @@ public class Session {
     @Id
     private String id;
     private Ref<User> user;
+    @Index
     private long expires;
 
     public String getId() {

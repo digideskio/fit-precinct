@@ -12,6 +12,7 @@ public class OfyService {
     static {
         ObjectifyService.register(OAuthLogin.class);
         ObjectifyService.register(User.class);
+        ObjectifyService.register(UploadCredential.class);
         ObjectifyService.register(Session.class);
 
         ObjectifyService.register(Workout.class);

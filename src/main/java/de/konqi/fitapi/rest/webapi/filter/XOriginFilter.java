@@ -22,6 +22,7 @@ public class XOriginFilter implements ContainerResponseFilter {
 
         responseContext.getHeaders().add("Access-Control-Allow-Origin", origin); // "http://localhost:9000, http://localhost:8080"
         responseContext.getHeaders().add("Access-Control-Allow-Credentials", true);
-        responseContext.getHeaders().add("Access-Control-Allow-Headers", "Session");
+        responseContext.getHeaders().add("Access-Control-Allow-Headers", "Content-Type, Session");
+        responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS, HEAD");
     }
 }

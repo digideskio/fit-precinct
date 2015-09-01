@@ -45,7 +45,9 @@ angular.module('nodeApp')
     return {
       'me': function() {
         var deferred = $q.defer();
-        $http.get(baseUri + '/me', {'withCredentials': true}).then(function(result) {
+        $http.get(baseUri + '/me', {
+          'withCredentials': true
+        }).then(function(result) {
           deferred.resolve(result);
         }, function(error) {
           deferred.reject(error);
@@ -74,12 +76,14 @@ angular.module('nodeApp')
 
         return loginDeferred.promise;
       },
-      'setUploadPassword': function(password) {
+      'setUploadUser': function(username, password) {
         var deferred = $q.defer();
-        var request = {
+        $http.put(baseUri + '/uploadUser', {
+          'username': username,
           'password': password
-        };
-        $http.put(baseUri + '/uploadpw', request).then(function(result) {
+        }, {
+          'withCredentials': true
+        }).then(function(result) {
           deferred.resolve(result);
         }, function(error) {
           deferred.reject(error);

@@ -1,5 +1,8 @@
 package de.konqi.fitapi.rest.openfitapi.filter;
 
+import de.konqi.fitapi.db.domain.User;
+import de.konqi.fitapi.db.repository.SessionRepository;
+import de.konqi.fitapi.rest.openfitapi.OpenFitApi;
 import de.konqi.fitapi.rest.openfitapi.OpenFitApiUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +11,7 @@ import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.Cookie;
 import java.io.IOException;
 
 /**
@@ -19,23 +23,21 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
-        for (String headerName : containerRequestContext.getHeaders().keySet()) {
-            for (String string : containerRequestContext.getHeaders().get(headerName)) {
-                logger.info("Header: " + headerName + ": " +
-                        string);
+        Cookie cookie = containerRequestContext.getCookies().get(OpenFitApi.SESSION_HEADER_NAME);
+        if (cookie != null) {
+            String userSession = cookie.getValue();
+            if (userSession != null) {
+                User user = SessionRepository.getSession(userSession);
+                if (user != null) {
+                    logger.info("Session authenticated as user '" + user.getId() + "'.");
+                    OpenFitApiUser openFitApiUser = new OpenFitApiUser(user);
+                    containerRequestContext.setSecurityContext(openFitApiUser);
+                } else {
+                    logger.info("Invalid session.");
+                }
+            } else {
+                logger.debug("No session");
             }
         }
-
-        for (String cookieName : containerRequestContext.getCookies().keySet()) {
-            logger.info("Cookie: " + containerRequestContext.getCookies().get(cookieName).getName() + ": " +
-                    containerRequestContext.getCookies().get(cookieName).getValue());
-        }
-
-        // containerRequestContext.
-
-        // TODO load User information from header
-        OpenFitApiUser openFitApiUser = new OpenFitApiUser();
-
-        containerRequestContext.setSecurityContext(openFitApiUser);
     }
 }

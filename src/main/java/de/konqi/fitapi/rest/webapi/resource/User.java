@@ -6,7 +6,6 @@ import de.konqi.fitapi.auth.*;
 import de.konqi.fitapi.db.repository.OAuthLoginRepository;
 import de.konqi.fitapi.db.repository.SessionRepository;
 import de.konqi.fitapi.db.repository.UserRepository;
-import de.konqi.fitapi.rest.openfitapi.resources.Credential;
 import de.konqi.fitapi.rest.webapi.WebApiUser;
 import de.konqi.fitapi.rest.webapi.domain.LoginCallbackResponse;
 import org.glassfish.jersey.server.mvc.Viewable;
@@ -33,34 +32,36 @@ import java.util.Map;
  */
 @Path("/user")
 @PermitAll
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class User {
     private static final Logger logger = LoggerFactory.getLogger(User.class);
 
     @GET
     @Path("/me")
-    @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("user")
-    public Response me(Credential credential, @Context HttpServletResponse response, @Context SecurityContext sc) {
-//        sc.
-        // .entity()
+    public Response me(@Context HttpServletResponse response, @Context SecurityContext sc) {
         Principal userPrincipal = sc.getUserPrincipal();
-        return Response.ok().build();
+        de.konqi.fitapi.common.User user = (de.konqi.fitapi.common.User) userPrincipal;
+        return Response.ok().entity(user).build();
     }
 
     @PUT
     @RolesAllowed("user")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/uploadpw")
-    public Response setUploadPassword(Map<String, String> params, @Context SecurityContext sc) {
+    @Path("/uploadUser")
+    public Response setUploadUser(Map<String, String> params, @Context SecurityContext sc) {
         WebApiUser webApiUser = (WebApiUser) sc.getUserPrincipal();
         String password = params.get("password");
+        String username = params.get("username");
         logger.info("New password is: " + password);
-        UserRepository.setUploadPassword(webApiUser, password);
+        if(UserRepository.setUploadUser(webApiUser, username, password)){
+            return Response.ok().build();
+        }
+
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/login/{type}")
     public Response login(@PathParam("type") String type, @Context HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
@@ -90,6 +91,7 @@ public class User {
 
     @GET
     @Path("/login/{type}/oauth2callback")
+    @Produces(MediaType.TEXT_HTML)
     public Response loginCallback(@PathParam("type") String type,
                                   @QueryParam("state") String state,
                                   @QueryParam("code") String code,
@@ -126,7 +128,7 @@ public class User {
                     if (idClaim == null) return Response.status(Response.Status.UNAUTHORIZED).build();
                     // FIXME tokenResponse.g
 
-                    de.konqi.fitapi.db.domain.User user = OAuthLoginRepository.createUser(idClaim.getIsssuer(), idClaim.getSubscriber());
+                    de.konqi.fitapi.db.domain.User user = OAuthLoginRepository.createUser(idClaim.getIsssuer(), idClaim.getSubscriber(), idClaim.getEmail());
                     String sessionId = SessionRepository.createSession(user);
                     // Ref<de.konqi.fitapi.db.domain.User> userRef = OAuthLoginRepository.getLoginUser(idClaim.getIsssuer(), idClaim.getSubscriber());
 

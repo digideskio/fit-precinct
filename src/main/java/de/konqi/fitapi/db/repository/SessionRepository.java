@@ -20,6 +20,12 @@ public class SessionRepository {
     private static final long SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7;
 
     public static String createSession(final User user) {
+        return createSession(Ref.create(user));
+    }
+
+    public static String createSession(final Ref<User> userRef) {
+        assert userRef != null;
+
         Session session;
         do {
             session = OfyService.ofy().transact(new Work<Session>() {
@@ -27,7 +33,7 @@ public class SessionRepository {
                 public Session run() {
                     Session session = new Session();
                     session.setId(new BigInteger(130, new SecureRandom()).toString(32));
-                    session.setUser(Ref.create(user));
+                    session.setUser(userRef);
                     session.setExpires(System.currentTimeMillis() / 1000 + SESSION_EXPIRATION_SECONDS);
 
                     if (OfyService.ofy().load().entity(session).now() == null) {
@@ -42,6 +48,7 @@ public class SessionRepository {
 
         return session.getId();
     }
+
 
     public static User getSession(String sessionId) {
         Session session = OfyService.ofy().load().key(Key.create(Session.class, sessionId)).now();

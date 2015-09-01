@@ -14,11 +14,11 @@ import java.util.List;
  */
 @Entity
 public class WorkoutData {
-    @Id
-    private Long id = null;
-
     @Parent
     private Ref<Workout> workout;
+
+    @Id
+    private Long id = null;
 
     private String type;
 

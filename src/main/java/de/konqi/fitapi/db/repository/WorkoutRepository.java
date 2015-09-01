@@ -16,6 +16,6 @@ public class WorkoutRepository {
     private static final Logger logger = LoggerFactory.getLogger(WorkoutRepository.class);
 
     public static List<Workout> getWorkoutListForUser(User user){
-        return OfyService.ofy().load().type(Workout.class).filter("user", Ref.create(user)).list();
+        return OfyService.ofy().load().type(Workout.class).ancestor(Ref.create(user)).list();
     }
 }

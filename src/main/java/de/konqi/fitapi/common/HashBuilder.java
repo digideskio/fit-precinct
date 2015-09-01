@@ -13,7 +13,7 @@ public class HashBuilder {
     private static final Logger logger = LoggerFactory.getLogger(HashBuilder.class);
 
     public static HashBuilder MD5 = new HashBuilder("MD5");
-    public static HashBuilder SHA256 = new HashBuilder("SHA256");
+    public static HashBuilder SHA256 = new HashBuilder("SHA-256");
 
     private MessageDigest md;
 
@@ -22,9 +22,8 @@ public class HashBuilder {
             md = MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
             logger.error("Unable to initialize message digester.", e);
+            md = null;
         }
-
-        md = null;
     }
 
     public DigestOutput digest(String string) {
