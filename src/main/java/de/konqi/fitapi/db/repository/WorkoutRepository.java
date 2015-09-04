@@ -3,7 +3,7 @@ package de.konqi.fitapi.db.repository;
 import com.googlecode.objectify.Ref;
 import de.konqi.fitapi.db.OfyService;
 import de.konqi.fitapi.db.domain.User;
-import de.konqi.fitapi.rest.webapi.resource.Workout;
+import de.konqi.fitapi.db.domain.Workout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

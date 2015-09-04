@@ -3,6 +3,7 @@ package de.konqi.fitapi.rest.webapi;
 import de.konqi.fitapi.rest.webapi.filter.OAuthRequestFilter;
 import de.konqi.fitapi.rest.webapi.filter.XOriginFilter;
 import de.konqi.fitapi.rest.webapi.resource.User;
+import de.konqi.fitapi.rest.webapi.resource.Workout;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
@@ -31,6 +32,7 @@ public class WebApi extends ResourceConfig {
         register(OAuthRequestFilter.class);
         register(XOriginFilter.class);
         register(User.class);
+        register(Workout.class);
 
         // Register an instance of LoggingFilter.
         register(new LoggingFilter(LOGGER, true));

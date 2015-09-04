@@ -13,27 +13,35 @@ angular
     'ngAnimate',
     'ngCookies',
     'ngResource',
-    'ngRoute',
+    'ui.router',
     'ngSanitize',
     'ngTouch'
   ])
-  .config(function ($routeProvider, $locationProvider) {
-    $routeProvider
-      .when('/', {
+  .config(['$stateProvider', '$locationProvider', function ($stateProvider, $locationProvider) {
+    $stateProvider
+      .state('root', {
+        url: '/',
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/about', {
+      .state('about', {
+        url: '/about',
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
-      .when('/user', {
+      .state('user', {
+        url: '/user',
         templateUrl: 'views/user.html',
         controller: 'UserCtrl'
       })
-      .otherwise({
-        redirectTo: '/'
+      .state('workouts', {
+        url: '/workouts',
+        templateUrl: 'views/workouts.html',
+        controller: 'WorkoutsCtrl'
       });
+      //.otherwise({
+      //  redirectTo: '/'
+      //});
 
       $locationProvider.html5Mode(true);
-  });
+  }]);

@@ -1,5 +1,6 @@
 package de.konqi.fitapi.db.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -15,6 +16,7 @@ import java.util.Map;
  */
 @Entity
 public class Workout {
+    @JsonIgnore
     @Parent
     private Ref<User> user;
 
