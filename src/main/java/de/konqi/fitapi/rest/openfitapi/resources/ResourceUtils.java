@@ -7,8 +7,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.primitives.Longs;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import de.konqi.fitapi.db.domain.*;
 import de.konqi.fitapi.db.OfyService;
+import de.konqi.fitapi.db.domain.DataSet;
+import de.konqi.fitapi.db.domain.WorkoutData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ public class ResourceUtils {
 
     /**
      * load specific workout of a user
+     *
      * @param itemId
      * @param user
      * @return
@@ -116,7 +118,7 @@ public class ResourceUtils {
     public static Long storeWorkout(Workout workout, de.konqi.fitapi.db.domain.User user) {
         Stack<Object> workoutDataToAdd = new Stack<>();
 
-        Key<de.konqi.fitapi.db.domain.Workout> workoutKey = OfyService.factory().allocateId(de.konqi.fitapi.db.domain.Workout.class);
+        Key<de.konqi.fitapi.db.domain.Workout> workoutKey = OfyService.factory().allocateId(user, de.konqi.fitapi.db.domain.Workout.class);
         de.konqi.fitapi.db.domain.Workout dbWorkout = new de.konqi.fitapi.db.domain.Workout();
         dbWorkout.setUser(Ref.create(user));
         dbWorkout.setId(workoutKey.getId());
@@ -180,6 +182,15 @@ public class ResourceUtils {
                     datasets = new ArrayList<>(MAX_SETS);
                 }
             }
+
+            if (datasets.size() > 0) {
+                WorkoutData workoutData = new WorkoutData();
+                workoutData.setWorkout(Ref.create(workoutKey));
+                workoutData.setType("location");
+                workoutData.setDataSet(datasets);
+                datapkg.add(workoutData);
+            }
+
         }
 
         return datapkg;
@@ -209,6 +220,15 @@ public class ResourceUtils {
                     datasets = new ArrayList<>(MAX_SETS);
                 }
             }
+
+            if (datasets.size() > 0) {
+                WorkoutData workoutData = new WorkoutData();
+                workoutData.setWorkout(Ref.create(workoutKey));
+                workoutData.setType(dataName);
+                workoutData.setDataSet(datasets);
+                datapkg.add(workoutData);
+            }
+
         }
 
         return datapkg;

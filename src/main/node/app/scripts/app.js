@@ -38,6 +38,11 @@ angular
         url: '/workouts',
         templateUrl: 'views/workouts.html',
         controller: 'WorkoutsCtrl'
+      })
+      .state('workout', {
+        url: '/workout/:id',
+        templateUrl: 'views/workout.html',
+        controller: 'WorkoutCtrl'
       });
       //.otherwise({
       //  redirectTo: '/'
