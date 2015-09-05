@@ -1,0 +1,105 @@
+@import "variables";
+@import "mixins";
+.navbar {
+  .navbar-header {
+    z-index: 5000;
+    background-color: $blue;
+    color: $color_light_gray;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    a {
+      color: $color_light_gray;
+    }
+    .icon-bar {
+      background-color: $color_light_gray;
+    }
+  }
+}
+
+@media(min-width: 768px) {
+  .navbar {
+    .navbar-header {
+      position: fixed;
+      width: 100%;
+    }
+    .collapse,
+    .navbar-collapse {
+      z-index: 4000;
+      @include margin-animation(200ms);
+      position: fixed;
+      left: 0;
+      top: 64px;
+      bottom: 0;
+      background-color: #fff;
+      width: 200px;
+      height: 100%;
+      padding-right: 0;
+      padding-left: 0;
+      box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.26);
+      li {
+        width: 100%;
+        a,
+        a > glyphicon, a > fa {
+          color: $color_darker_gray;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          font-size: 17px;
+        }
+      }
+      span.glyphicon, span.fa {
+        float: right;
+      }
+      margin-left: -160px;
+      &:hover {
+        margin-left: 0;
+        span.glyphicon, span.fa {
+          margin-right: 25px;
+          float: none;
+        }
+      }
+      .navbar-nav {
+        ul {
+          height: 300px;
+          overflow-y: auto;
+        }
+        > li {
+          &:last-child {
+            border-bottom: 1px $color_mercury solid;
+          }
+          &:first-child {
+            border-top: 1px $color_mercury solid;
+          }
+        }
+      }
+      ul {
+        width: 100%;
+      }
+      nav {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
+    }
+  }
+  .main {
+    position: absolute;
+    top: 64px;
+    right: 0;
+    bottom: 0;
+    left: 40px;
+    margin-top: 3px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+@media(min-width: 1330px) {
+  .navbar .navbar-collapse {
+    margin-left: 0;
+  }
+  .main {
+    left: 200px;
+  }
+}

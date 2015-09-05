@@ -1,0 +1,69 @@
+<p></p>
+<div class="row">
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-aqua"><i class="fa fa-map-signs"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Distance</span>
+        <span class="info-box-number">{{workout.data.total_distance/1000 | number:2}} KM</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-green"><i class="fa fa-hourglass"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Time</span>
+        <span class="info-box-number">{{workout.data.clockDuration | momentFilter:'seconds':'duration':'hours'}}h {{workout.data.clockDuration | momentFilter:'seconds':'duration':'minutes'}}min</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow"><i class="fa fa-tachometer"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Avg. Speed</span>
+        <span class="info-box-number">{{workout.data.speedAvg*3.6 | number:2}} KM/H</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-red"><i class="fa fa-heartbeat"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Avg. Heartrate</span>
+        <span class="info-box-number">{{workout.data.heartrateAvg}} BPM</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6" ng-repeat="chart in charts">
+    <div class="box box-success">
+      <div class="box-header with-border">
+        <h3 class="box-title">{{chart.series[0]}}</h3>
+        <canvas id="line" class="chart chart-line" chart-data="chart.data" chart-labels="chart.labels" chart-series="series" chart-click="onClick">
+        </canvas>
+        <!-- /.box-tools -->
+      </div>
+      <!-- /.box-header -->
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">Random stat</h3>
+        <!-- /.box-tools -->
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        The body of the box
+      </div>
+      <!-- /.box-body -->
+    </div>
+  </div>
+</div>

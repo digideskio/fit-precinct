@@ -1,9 +1,17 @@
+$fa-font-path: "../bower_components/components-font-awesome/fonts";
+@import "../bower_components/components-font-awesome/scss/font-awesome";
 @import "variables";
 @import "mixins";
+@import "misc";
 @import "navigation";
+@import "boxes";
+@import "small-box";
+@import "timeline";
+@import "info-box";
 
 body {
   text-rendering: optimizeLegibility;
+  background-color: $light_gray;
 }
 
 

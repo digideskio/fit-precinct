@@ -10,6 +10,8 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css(.) styles/vendor.css -->
   <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
@@ -32,13 +34,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">fit-precinct</a>
+      <a class="navbar-brand" href="#"><span class="fa fa-heartbeat"></span> fit-precinct</a>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/"><span style="font-size:16px;" class="hidden-xs showopacity glyphicon glyphicon-home"></span>Dashboard</a></li>
-        <li><a href="/workouts"><span style="font-size:16px;" class="hidden-xs showopacity glyphicon glyphicon-envelope"></span>Workouts</a></li>
+        <li class="active"><a href="/"><span style="font-size:16px;" class="hidden-xs showopacity fa fa-dashboard"></span>Dashboard</a></li>
+        <li><a href="/workouts"><span style="font-size:16px;" class="hidden-xs showopacity fa fa-calendar-o"></span>Workouts</a></li>
         <li><a href="/user"><span style="font-size:16px;" class="hidden-xs showopacity glyphicon glyphicon-user"></span>User</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span style="font-size:16px;" class="hidden-xs showopacity glyphicon glyphicon-cog"></span>Settings <span class="caret"></span></a>
@@ -64,9 +66,9 @@
     <div class="container">
       <div ui-view="" /></div>
   </div>
-  <div class="footer">
+<!--   <div class="footer">
     <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-  </div>
+  </div> -->
   <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
   <script>
   (function(i, s, o, g, r, a, m) {
@@ -114,6 +116,8 @@
   <script src="bower_components/URL/URL.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/Chart.js/Chart.js"></script>
+  <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:js({.tmp,app}) scripts/scripts.js -->

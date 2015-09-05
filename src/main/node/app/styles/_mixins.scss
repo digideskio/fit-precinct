@@ -1,0 +1,42 @@
+@import "../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/clearfix";
+@import "../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/border-radius";
+@import "../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/vendor-prefixes";
+
+@mixin margin-animation($duration) {
+  -webkit-transition: margin $duration ease-out;
+  -moz-transition: margin $duration ease-out;
+  -o-transition: margin $duration ease-out;
+  transition: margin $duration ease-out;
+}
+
+//border radius creator
+@mixin single-border-radius($radius) {
+  border-radius: $radius;
+}
+
+//Different radius each side
+@mixin border-radius($top-left, $top-right, $bottom-left, $bottom-right) {
+  border-top-left-radius: $top-left;
+  border-top-right-radius: $top-right;
+  border-bottom-right-radius: $bottom-right;
+  border-bottom-left-radius: $bottom-left;
+}
+
+//Box solid color variantion creator
+@mixin box-solid-variant($color, $text-color: #fff) {
+  border: 1px solid $color;
+  > .box-header {
+    color: $text-color;
+    background: $color;
+    background-color: $color;
+    a,
+    .btn {
+      color: $text-color;
+    }
+  }
+}
+
+@mixin bg-color($bgcolor, $fgcolor){
+  background-color: $bgcolor !important;
+  color: $fgcolor !important;
+}
