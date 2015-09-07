@@ -62,3 +62,8 @@
 .bg-red {
   @include bg-color($red, $white)
 }
+
+.bg-blue {
+  @include bg-color($blue, $white)
+}
+

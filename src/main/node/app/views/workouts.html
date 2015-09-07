@@ -1,34 +1,43 @@
-<h2>Workouts</h2>
-<div ng-repeat="workout in workouts">
-  <div class="col-md-6">
-    <div class="panel panel-primary" ui-sref="workout({id:workout.id})">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span>{{workout.type}}</span> {{workout.name}}<span class="pull-right">{{workout.startTime | momentFilter:'date':'LLL'}}</span></h3>
-      </div>
-      <div class="panel-body">
+<h2>Workouts <small>timeline</small></h2>
+<ul class="timeline">
+  <li ng-repeat="item in ::timeline" ng-class="{'time-label':item.type=='date'}">
+    <span ng-if="item.type=='date'" class="bg-red">{{item.value}}</span>
+    <!-- timeline icon -->
+    <i ng-if="item.type=='workout'" ng-class="icon[item.symbol]"></i>
+    <div ng-if="item.type=='workout'" class="timeline-item" ng-init="::workout = item.value">
+      <span class="time"><i class="fa fa-clock-o"></i> {{::workout.startTime | momentFilter:'HH:mm'}}</span>
+      <h3 class="timeline-header"><a ui-sref="workout({id:workout.id})">{{workout.name}}</a> <small ng-init="time = workout.data.clockDuration">{{time  | momentFilter:'seconds':'duration':'hours'}}:{{time | momentFilter:'seconds':'duration':'minutes'}} h, {{workout.data.total_distance/1000 | number:2 }} km</small></h3>
+      <div class="timeline-body">
         <div class="row">
-          <div class="col-md-4"><span class="fa fa-clock-o" title="Duration"></span> Total / Active</div>
-          <div class="col-md-2 text-center"><span class="fa fa-arrows-h" title="Distance"></span></div>
-          <div class="col-md-2 text-center"><span class="fa fa-circle-o-notch" title="Cadence (avg/max)"></span></div>
-          <div class="col-md-2 text-center"><span class="fa fa-heartbeat" title="Heartrate (avg/max)"></span></div>
-          <div class="col-md-2 text-center"><span class="fa fa-arrows-v" title="Elevation (gain/loss)"></span></div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">{{workout.data.clockDuration | momentFilter:'seconds':'duration':'asHours' | number:2}} hours / {{workout.data.duration | momentFilter:'seconds':'duration':'asHours' | number:2}} hours</div>
-          <div class="col-md-2 text-center">{{workout.data.total_distance/1000 | number:2 }} km</div>
-          <div class="col-md-2 text-center">{{workout.data.cadenceAvg}} / {{workout.data.cadenceMax}}</div>
-          <div class="col-md-2 text-center">{{workout.data.heartrateAvg}} / {{workout.data.heartrateMax}}</div>
-          <div class="col-md-2 text-center">{{workout.data.elevationGain}} / {{workout.data.elevationLoss}}</div>
+          <div class="col-md-4"><span class="fa fa-clock-o" title="Duration"></span> Total / Active
+            <br/> {{workout.data.clockDuration | momentFilter:'seconds':'duration':'hours'}}:{{workout.data.clockDuration | momentFilter:'seconds':'duration':'minutes'}} h / {{workout.data.duration | momentFilter:'seconds':'duration':'hours'}}:{{workout.data.duration | momentFilter:'seconds':'duration':'minutes'}} h</div>
+          <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-road" title="Distance"></span>
+            <br/>{{workout.data.total_distance/1000 | number:2 }} km</div>
+          <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-circle-o-notch" title="Cadence (avg/max)"></span>
+            <br/>{{workout.data.cadenceAvg}} / {{workout.data.cadenceMax}}</div>
+          <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-heartbeat" title="Heartrate (avg/max)"></span>
+            <br/>{{workout.data.heartrateAvg}} / {{workout.data.heartrateMax}}</div>
+          <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-arrows-v" title="Elevation (gain/loss)"></span>
+            <br/>{{workout.data.elevationGain}} / {{workout.data.elevationLoss}}</div>
         </div>
         <div>
           <div class="row">
             <div class="col-md-3">
-              Note: </div>
-            <div class="col-md-9">
-              {{workout.notes}}
+              <span class="label label-info">Notes</span>
+              <div ng-bind-html="workout.notes">
+              </div>
             </div>
           </div>
         </div>
       </div>
+<!--       <div class="timeline-footer">
+        <a class="btn btn-primary btn-xs">...</a>
+      </div> -->
     </div>
-  </div>
+    </span>
+  </li>
+  <!-- END timeline item -->
+  <li>
+    <i class="fa fa-calendar bg-blue"></i>
+  </li>
+</ul>

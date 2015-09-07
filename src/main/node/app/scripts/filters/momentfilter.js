@@ -29,7 +29,7 @@ angular.module('nodeApp')
             case 'asMinutes':
               return moment.duration(input, inputFormat).asMinutes();
             default:
-              return moment.duration(input, inputFormat).asMinutes();
+              return moment.duration(input, inputFormat)[outputFormat]();
           }
           break;
         case 'date':

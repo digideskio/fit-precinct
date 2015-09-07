@@ -1,4 +1,4 @@
-<p></p>
+<h2>Workout details <i ng-class="icon(workout.type)"></i><small ng-if="workout.name"> ({{::workout.name}})</small></h2>
 <div class="row">
   <div class="col-md-3">
     <div class="info-box">
@@ -41,9 +41,25 @@
     </div>
   </div>
 </div>
+<!-- Map Area -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-success">
+      <div class="box-header with-border" style="max-height: 500px;">
+        <div id="map" style="max-height: 500px;"></div>
+        <!-- /.box-tools -->
+      </div>
+      <!-- /.box-header -->
+      <div ng-if="loading" class="overlay">
+        <i class="fa fa-refresh fa-spin"></i>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Map Area -->
 <div class="row">
   <div class="col-md-6" ng-repeat="chart in charts">
-    <div class="box box-success">
+    <div class="box" ng-class="chart.boxtype">
       <div class="box-header with-border">
         <h3 class="box-title">{{chart.series[0]}}</h3>
         <canvas id="line" class="chart chart-line" chart-data="chart.data" chart-labels="chart.labels" chart-series="series" chart-click="onClick">
@@ -51,6 +67,9 @@
         <!-- /.box-tools -->
       </div>
       <!-- /.box-header -->
+      <div ng-if="loading" class="overlay">
+        <i class="fa fa-refresh fa-spin"></i>
+      </div>
     </div>
   </div>
   <div class="col-md-6">
@@ -61,7 +80,6 @@
       </div>
       <!-- /.box-header -->
       <div class="box-body">
-        The body of the box
       </div>
       <!-- /.box-body -->
     </div>
