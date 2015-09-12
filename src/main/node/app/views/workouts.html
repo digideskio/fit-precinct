@@ -6,13 +6,13 @@
     <i ng-if="item.type=='workout'" ng-class="icon[item.symbol]"></i>
     <div ng-if="item.type=='workout'" class="timeline-item" ng-init="::workout = item.value">
       <span class="time"><i class="fa fa-clock-o"></i> {{::workout.startTime | momentFilter:'HH:mm'}}</span>
-      <h3 class="timeline-header"><a ui-sref="workout({id:workout.id})">{{workout.name}}</a> <small ng-init="time = workout.data.clockDuration">{{time  | momentFilter:'seconds':'duration':'hours'}}:{{time | momentFilter:'seconds':'duration':'minutes'}} h, {{workout.data.total_distance/1000 | number:2 }} km</small></h3>
+      <h3 class="timeline-header"><a ui-sref="workout({id:workout.id})">{{workout.name}}</a> <small ng-init="time = workout.data.clockDuration">{{time  | momentFilter:'seconds':'duration':'hours'}}:{{time | momentFilter:'seconds':'duration':'minutes'}} h, {{workout.data.totalDistance/1000 | number:2 }} km</small></h3>
       <div class="timeline-body">
         <div class="row">
           <div class="col-md-4"><span class="fa fa-clock-o" title="Duration"></span> Total / Active
             <br/> {{workout.data.clockDuration | momentFilter:'seconds':'duration':'hours'}}:{{workout.data.clockDuration | momentFilter:'seconds':'duration':'minutes'}} h / {{workout.data.duration | momentFilter:'seconds':'duration':'hours'}}:{{workout.data.duration | momentFilter:'seconds':'duration':'minutes'}} h</div>
           <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-road" title="Distance"></span>
-            <br/>{{workout.data.total_distance/1000 | number:2 }} km</div>
+            <br/>{{workout.data.totalDistance/1000 | number:2 }} km</div>
           <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-circle-o-notch" title="Cadence (avg/max)"></span>
             <br/>{{workout.data.cadenceAvg}} / {{workout.data.cadenceMax}}</div>
           <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-heartbeat" title="Heartrate (avg/max)"></span>

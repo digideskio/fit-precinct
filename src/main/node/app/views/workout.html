@@ -1,11 +1,52 @@
-<h2>Workout details <i ng-class="icon(workout.type)"></i><small ng-if="workout.name"> ({{::workout.name}})</small></h2>
+<h2><i ng-class="icon(workoutHead.type)"></i> Workout details<a href="" data-toggle="modal" data-target="#editHeadModal">
+  <span class="fa fa-edit"></span>
+</a><small ng-if="workoutHead.name"> ({{workoutHead.name}})</small></h2>
+<div class="modal fade" id="editHeadModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">Edit Workout</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="">Name</label>
+            <input class="form-control" type="text" ng-model="workoutHead.name">
+          </div>
+          <div class="form-group">
+            <label for="">Start time</label>
+            <input class="form-control" type="text" ng-model="workoutHead.startTime">
+          </div>
+          <div class="form-group">
+            <label for="">Type</label>
+            <select class="form-control" ng-model="workoutHead.type">
+              <option>Cycling</option>
+              <option>Walking</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="">Notes</label>
+            <textarea class="form-control" rows="3" ng-model="workoutHead.notes"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="updateHead($event, '#editHeadModal')">Save changes</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
 <div class="row">
   <div class="col-md-3">
     <div class="info-box">
       <span class="info-box-icon bg-aqua"><i class="fa fa-map-signs"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Distance</span>
-        <span class="info-box-number">{{workout.data.total_distance/1000 | number:2}} KM</span>
+        <span class="info-box-number">{{workoutHead.data.totalDistance/1000 | number:2}} KM</span>
       </div>
       <!-- /.info-box-content -->
     </div>
@@ -15,7 +56,7 @@
       <span class="info-box-icon bg-green"><i class="fa fa-hourglass"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Time</span>
-        <span class="info-box-number">{{workout.data.clockDuration | momentFilter:'seconds':'duration':'hours'}}h {{workout.data.clockDuration | momentFilter:'seconds':'duration':'minutes'}}min</span>
+        <span class="info-box-number">{{workoutHead.data.clockDuration | momentFilter:'seconds':'duration':'hours'}}h {{workoutHead.data.clockDuration | momentFilter:'seconds':'duration':'minutes'}}min</span>
       </div>
       <!-- /.info-box-content -->
     </div>
@@ -25,7 +66,7 @@
       <span class="info-box-icon bg-yellow"><i class="fa fa-tachometer"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Avg. Speed</span>
-        <span class="info-box-number">{{workout.data.speedAvg*3.6 | number:2}} KM/H</span>
+        <span class="info-box-number">{{workoutHead.data.speedAvg*3.6 | number:2}} KM/H</span>
       </div>
       <!-- /.info-box-content -->
     </div>
@@ -35,7 +76,7 @@
       <span class="info-box-icon bg-red"><i class="fa fa-heartbeat"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Avg. Heartrate</span>
-        <span class="info-box-number">{{workout.data.heartrateAvg}} BPM</span>
+        <span class="info-box-number">{{workoutHead.data.heartrateAvg}} BPM</span>
       </div>
       <!-- /.info-box-content -->
     </div>
@@ -62,7 +103,7 @@
     <div class="box" ng-class="chart.boxtype">
       <div class="box-header with-border">
         <h3 class="box-title">{{chart.series[0]}}</h3>
-        <canvas id="line" class="chart chart-line" chart-data="chart.data" chart-labels="chart.labels" chart-series="series" chart-click="onClick">
+        <canvas id="line" class="chart chart-line" chart-data="chart.data" chart-labels="chart.labels" chart-options="chart.options" chart-series="series" chart-click="onClick">
         </canvas>
         <!-- /.box-tools -->
       </div>
@@ -80,6 +121,28 @@
       </div>
       <!-- /.box-header -->
       <div class="box-body">
+        <div </div>
+          <!-- /.box-body -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title">Notes</h3>
+        <div class="box-tools pull-right">
+          <button type="button" class="btn btn-box-tool" data-toggle="collapse" data-target="#notesCollapse" aria-expanded="false" aria-controls="notesCollapse"><i class="fa fa-plus"></i></button>
+        </div>
+        <!-- /.box-tools -->
+      </div>
+      <!-- /.box-header -->
+      <div class="collapse" id="notesCollapse">
+        <div class="box-body">
+          {{workoutHead.notes}}
+        </div>
       </div>
       <!-- /.box-body -->
     </div>

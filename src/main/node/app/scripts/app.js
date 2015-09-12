@@ -30,6 +30,11 @@ angular
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
+      .state('help', {
+        url: '/help',
+        templateUrl: 'views/help.html',
+        controller: 'HelpCtrl'
+      })
       .state('user', {
         url: '/user',
         templateUrl: 'views/user.html',

@@ -129,7 +129,7 @@ public class ResourceUtils {
         dbWorkout.setStartTime(workout.getStart_time());
         dbWorkout.setType(workout.getType());
 
-        dbWorkout.getData().put("total_distance", workout.getTotal_distance());
+        dbWorkout.getData().put("totalDistance", workout.getTotal_distance());
         dbWorkout.getData().put("duration", workout.getDuration());
         dbWorkout.getData().put("clockDuration", workout.getClock_duration());
         dbWorkout.getData().put("calories", workout.getCalories());

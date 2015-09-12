@@ -8,13 +8,14 @@
  * Service in the nodeApp.
  */
 angular.module('nodeApp')
-  .factory('userService', ['$http', '$q', '$window', '$interval', function userService($http, $q, $window, $interval) {
+  .factory('userService', ['$http', '$q', '$window', '$interval', 'storageService', function userService($http, $q, $window, $interval, storageService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var sessionId = null;
     var baseUri = 'http://localhost:8080/web/api/user';
 
     var loginDeferred = null;
     var loginIntervalPromise = null;
+    var useLocalStorage = false;
 
     var receiveMessage = function(event) {
       // check event origin
@@ -46,6 +47,18 @@ angular.module('nodeApp')
       'me': function() {
         var deferred = $q.defer();
         $http.get(baseUri + '/me', {
+          'withCredentials': true
+        }).then(function(result) {
+          deferred.resolve(result);
+        }, function(error) {
+          deferred.reject(error);
+        });
+
+        return deferred.promise;
+      },
+      'update': function(user) {
+        var deferred = $q.defer();
+        $http.post(baseUri + '/me', user, {
           'withCredentials': true
         }).then(function(result) {
           deferred.resolve(result);
@@ -90,6 +103,22 @@ angular.module('nodeApp')
         });
 
         return deferred.promise;
+      },
+      'localStorageAvailable': function() {
+        return storageService.available();
+      },
+      'useLocalStorage': function(value) {
+        useLocalStorage = value;
+      },
+      'saveProfile': function(profile) {
+        if (useLocalStorage) {
+          storageService.put('profile', profile);
+        }
+      },
+      'getProfile': function() {
+        if (useLocalStorage) {
+          return storageService.get('profile');
+        }
       }
     };
   }]);

@@ -22,8 +22,10 @@ public class Workout {
 
     @Id
     private Long id = null;
-    
+
+    @Index
     Date startTime;
+    @Index
     String type;
     String sharing;
     String name;

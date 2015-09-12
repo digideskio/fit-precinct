@@ -8,7 +8,7 @@
  * Controller of the nodeApp
  */
 angular.module('nodeApp')
-  .controller('WorkoutCtrl', ['$scope', '$stateParams', 'workoutService', 'mathToolbox', 'openlayersService', function($scope, $stateParams, workoutService, mathToolbox, olService) {
+  .controller('WorkoutCtrl', ['$scope', '$stateParams', '$q', 'workoutService', 'mathToolbox', 'openlayersService', function($scope, $stateParams, $q, workoutService, mathToolbox, olService) {
     $scope.loading = true;
 
     $scope.dataset = [{
@@ -33,6 +33,14 @@ angular.module('nodeApp')
         'walking': 'icon-run',
         'cycling': 'icon-bicycle'
       }[name.toLowerCase()];
+    };
+
+    $scope.updateHead = function(e, modal) {
+      console.log(e);
+      workoutService.update($scope.workoutHead).then(function(result) {
+        console.log(result);
+        angular.element(modal).modal('hide');
+      });
     };
 
     $scope.mapSource = olService.source.mapQuest;
@@ -80,23 +88,21 @@ angular.module('nodeApp')
       map.getView().setZoom(13);
     }
 
+    $scope.workoutHead = {};
     $scope.workout = {};
 
-    workoutService.get($stateParams.id).then(function(result) {
-      angular.forEach(result.data, function(data) {
-        if (data.dataSet) {
-          if (typeof($scope.workout[data.type]) === 'undefined') {
-            $scope.workout[data.type] = data.dataSet;
-          } else {
-            $scope.workout[data.type].push.apply($scope.workout[data.type], data.dataSet);
-          }
-        } else {
-          angular.extend($scope.workout, data);
-        }
-      });
+    workoutService.load($stateParams.id).then(function(result) {
+      $scope.workoutHead = result.head;
+      $scope.workout = result.data;
 
       loadMapData($scope.map);
+      createCharts();
 
+      $scope.loading = false;
+
+    });
+
+    function createCharts() {
       var datasets = normalizeData('heartrate');
       var tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
       var heartrate = prepareData(tmpData);
@@ -122,7 +128,12 @@ angular.module('nodeApp')
         series: ['Distance'],
         labels: distance.labels,
         data: [distance.data],
-        boxtype: 'box-info'
+        boxtype: 'box-info',
+        options: {
+          bezierCurve: true,
+          scaleShowVerticalLines: false,
+          pointHitDetectionRadius: 1
+        }
       });
       if (cadence && cadence.data && cadence.data.length > 0) {
         $scope.charts.push({
@@ -149,9 +160,7 @@ angular.module('nodeApp')
         data: [heartrate.data],
         boxtype: 'box-danger'
       });
-
-      $scope.loading = false;
-    });
+    }
 
     function normalizeData(dataType) {
       var datasets = [];

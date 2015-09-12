@@ -1,6 +1,6 @@
-$fa-font-path: "../bower_components/components-font-awesome/fonts";
+// $fa-font-path: "../bower_components/components-font-awesome/fonts";
+// @import "../bower_components/components-font-awesome/scss/font-awesome";
 @import "fonts";
-@import "../bower_components/components-font-awesome/scss/font-awesome";
 @import "variables";
 @import "mixins";
 @import "misc";
@@ -15,5 +15,10 @@ body {
   background-color: $light_gray;
 }
 
-
+.profile-user-img {
+    margin: 0 auto;
+    width: 100px;
+    padding: 3px;
+    border: 3px solid #d2d6de;
+}
 

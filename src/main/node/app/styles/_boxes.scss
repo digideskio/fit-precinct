@@ -225,6 +225,8 @@
   padding: 5px;
   font-size: 12px;
   background: transparent;
+
+  @include css3-prefix(box-shadow, none);
   color: darken($box-default-border-top-color, 20%);
   .open &,
   &:hover {

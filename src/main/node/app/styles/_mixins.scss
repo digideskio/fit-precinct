@@ -2,6 +2,15 @@
 @import "../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/border-radius";
 @import "../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/vendor-prefixes";
 
+@mixin css3-prefix($property, $value) {
+  -webkit-#{$property}: #{$value};
+   -khtml-#{$property}: #{$value};
+     -moz-#{$property}: #{$value};
+      -ms-#{$property}: #{$value};
+       -o-#{$property}: #{$value};
+          #{$property}: #{$value};
+}
+
 @mixin margin-animation($duration) {
   -webkit-transition: margin $duration ease-out;
   -moz-transition: margin $duration ease-out;

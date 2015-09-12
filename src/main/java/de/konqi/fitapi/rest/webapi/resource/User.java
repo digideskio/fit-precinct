@@ -8,6 +8,7 @@ import de.konqi.fitapi.db.repository.SessionRepository;
 import de.konqi.fitapi.db.repository.UserRepository;
 import de.konqi.fitapi.rest.webapi.WebApiUser;
 import de.konqi.fitapi.rest.webapi.domain.LoginCallbackResponse;
+import org.apache.http.HttpStatus;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,23 @@ public class User {
         return Response.ok().entity(user).build();
     }
 
+    @POST
+    @Path("/me")
+    @RolesAllowed("user")
+    public Response updateProfile(de.konqi.fitapi.db.domain.User updateUser, @Context HttpServletResponse response, @Context SecurityContext sc) {
+        Principal userPrincipal = sc.getUserPrincipal();
+        de.konqi.fitapi.common.User user = (de.konqi.fitapi.common.User) userPrincipal;
+
+        user.setName(updateUser.getName());
+        user.setEmail(updateUser.getEmail());
+
+        if(UserRepository.updateUser(user)){
+            return Response.ok().entity(user).build();
+        }
+
+        return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
+    }
+
     @PUT
     @RolesAllowed("user")
     @Path("/uploadUser")
@@ -58,7 +76,7 @@ public class User {
             return Response.ok().build();
         }
 
-        return Response.status(Response.Status.BAD_REQUEST).build();
+        return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
     }
 
     @GET
@@ -86,7 +104,7 @@ public class User {
             return Response.seeOther(URI.create(authUrl)).build();
         }
 
-        return Response.status(Response.Status.BAD_REQUEST).build();
+        return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
     }
 
     @GET

@@ -50,6 +50,11 @@ public class UserRepository {
         return OfyService.ofy().load().key(Key.create(UploadCredential.class, username)).now();
     }
 
+    public static boolean updateUser(User user){
+        Key<User> now = OfyService.ofy().save().entity(user).now();
+        return now != null;
+    }
+
 //    public static User getUserByEmail(String uploadUsername) {
 //        List<User> users = OfyService.ofy().load().type(User.class).filter("uploadUsername", uploadUsername).list();
 //        if (users.size() == 1) {

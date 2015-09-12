@@ -1,22 +1,74 @@
+<h2><i class="fa fa-dashboard"></i> Dashboard <small>{{user.name}}</small></h2>
 <div ng-if="!user">
   <button class="btn btn-default" ng-click="login('google')">Login with Google Account</button>
 </div>
-<div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman">
-    <br> Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p>
+<!-- Trends -->
+<div class="row">
+  <div class="col-md-4">
+    <div class="info-box">
+      <span class="info-box-icon bg-green"><i class="fa fa-hourglass"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Time Trained (month)</span>
+        <span class="info-box-number">{{timeTrained | momentFilter:'seconds':'duration':'days'}}d {{timeTrained | momentFilter:'seconds':'duration':'hours'}}h {{timeTrained | momentFilter:'seconds':'duration':'minutes'}}min</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="info-box">
+      <span class="info-box-icon bg-aqua"><i class="fa" ng-class="battery(lastTraining)"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Last session</span>
+        <span class="info-box-number">{{lastTrained}}</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="info-box">
+      <span class="info-box-icon bg-red"><i class="fa fa-heartbeat"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Training frequency (month)</span>
+        <span class="info-box-number"><span class="fa fa-2x fa-arrow-right" style="{{trainingTrend}}" ></span></span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+  </div>
 </div>
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-  </p>
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
-  <h4>Karma</h4>
+<!-- some more stats -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title">Insanely useless heading</h3></div>
+      <div class="box-body"></div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title">Insanely useless heading</h3></div>
+      <div class="box-body"></div>
+    </div>
+  </div>
+</div>
+<!-- Latest Workout(s) -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title">Recent Workouts</h3>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <ul>
+          <li ng-repeat="workout in ::latestWorkouts">
+            <a ui-sref="workout({id:workout.id})">{{workout.type}} on {{workout.startTime | momentFilter:'LLL'}} ({{workout.name}})
+            <small class="pull-right">{{workout.data.totalDistance/1000 | number:2 }} km, {{workout.data.clockDuration | momentFilter:'seconds':'duration':'hours'}}:{{workout.data.clockDuration | momentFilter:'seconds':'duration':'minutes'}} h</small></a>
+          </li>
+        </ul>
+      </div>
+      <!-- /.box-body -->
+    </div>
+  </div>
 </div>
