@@ -18,12 +18,17 @@ angular
     'ngTouch',
     'chart.js'
   ])
-  .config(['$stateProvider', '$locationProvider', function ($stateProvider, $locationProvider) {
+  .config(['$stateProvider', '$locationProvider', '$httpProvider', function($stateProvider, $locationProvider, $httpProvider) {
     $stateProvider
-      .state('root', {
-        url: '/',
+      .state('dashboard', {
+        url: '/dashboard',
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
+      })
+      .state('login', {
+        url: '/',
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
       })
       .state('about', {
         url: '/about',
@@ -50,9 +55,21 @@ angular
         templateUrl: 'views/workout.html',
         controller: 'WorkoutCtrl'
       });
-      //.otherwise({
-      //  redirectTo: '/'
-      //});
+    //.otherwise({
+    //  redirectTo: '/'
+    //});
 
-      $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(true);
+
+    $httpProvider.defaults.withCredentials = true;
+  }]);
+
+
+angular.module('nodeApp')
+  .factory('apiLocation', ['$window', function apiLocation($window) {
+    if ($window.location.hostname === 'localhost') {
+      return 'http://localhost:8080';
+    } else {
+      return 'https://' + $window.location.hostname;
+    }
   }]);

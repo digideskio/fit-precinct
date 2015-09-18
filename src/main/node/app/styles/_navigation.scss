@@ -15,6 +15,10 @@
     .icon-bar {
       background-color: $color_light_gray;
     }
+    .navbar-brand {
+      font-weight: 300;
+      letter-spacing: .1px;
+    }
   }
 }
 
@@ -41,20 +45,23 @@
       li {
         width: 100%;
         a,
-        a > glyphicon, a > fa {
+        a > glyphicon,
+        a > fa {
           color: $color_darker_gray;
           padding-top: 10px;
           padding-bottom: 10px;
           font-size: 17px;
         }
       }
-      span.glyphicon, span.fa {
+      span.glyphicon,
+      span.fa {
         float: right;
       }
       margin-left: -160px;
       &:hover {
         margin-left: 0;
-        span.glyphicon, span.fa {
+        span.glyphicon,
+        span.fa {
           margin-right: 25px;
           float: none;
         }

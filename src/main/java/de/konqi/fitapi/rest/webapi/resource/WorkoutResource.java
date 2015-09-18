@@ -20,7 +20,7 @@ import java.util.List;
 @RolesAllowed("user")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class Workout {
+public class WorkoutResource {
     @GET
     @Path("/list")
     public Response getWorkoutList(@Context SecurityContext sc) {

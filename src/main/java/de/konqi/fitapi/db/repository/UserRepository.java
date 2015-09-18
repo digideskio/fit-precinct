@@ -1,8 +1,10 @@
 package de.konqi.fitapi.db.repository;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.Work;
+import de.konqi.fitapi.Utils;
 import de.konqi.fitapi.common.HashBuilder;
 import de.konqi.fitapi.db.OfyService;
 import de.konqi.fitapi.db.domain.UploadCredential;
@@ -51,7 +53,16 @@ public class UserRepository {
     }
 
     public static boolean updateUser(User user){
-        Key<User> now = OfyService.ofy().save().entity(user).now();
+        User dbUser = OfyService.ofy().load().key(Key.create(User.class, user.getId())).safe();
+
+        dbUser.setName(user.getName());
+        if(dbUser.getProfileImgBlobKey() != null){
+            Utils.blobstoreService.delete(new BlobKey(dbUser.getProfileImgBlobKey()));
+        }
+        dbUser.setProfileImgBlobKey(user.getProfileImgBlobKey());
+        // dbUser.setEmail(user.getEmail());
+
+        Key<User> now = OfyService.ofy().save().entity(dbUser).now();
         return now != null;
     }
 

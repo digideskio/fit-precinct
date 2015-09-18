@@ -2,13 +2,13 @@ package de.konqi.fitapi.rest.webapi;
 
 import de.konqi.fitapi.rest.webapi.filter.OAuthRequestFilter;
 import de.konqi.fitapi.rest.webapi.filter.XOriginFilter;
-import de.konqi.fitapi.rest.webapi.resource.User;
-import de.konqi.fitapi.rest.webapi.resource.Workout;
+import de.konqi.fitapi.rest.webapi.resource.BlobResource;
+import de.konqi.fitapi.rest.webapi.resource.UserResource;
+import de.konqi.fitapi.rest.webapi.resource.WorkoutResource;
 import org.glassfish.jersey.filter.LoggingFilter;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import org.glassfish.jersey.server.mvc.MvcFeature;
 import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
 
 import javax.ws.rs.ApplicationPath;
@@ -28,11 +28,13 @@ public class WebApi extends ResourceConfig {
 //        register(MvcFeature.class);
         property(JspMvcFeature.TEMPLATE_BASE_PATH, "/WEB-INF/jsp");
         register(JspMvcFeature.class);
+        register(MultiPartFeature.class);
 
         register(OAuthRequestFilter.class);
         register(XOriginFilter.class);
-        register(User.class);
-        register(Workout.class);
+        register(UserResource.class);
+        register(WorkoutResource.class);
+        register(BlobResource.class);
 
         // Register an instance of LoggingFilter.
         register(new LoggingFilter(LOGGER, true));

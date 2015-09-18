@@ -6,6 +6,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Created by konqi on 21.08.2015.
@@ -15,10 +16,12 @@ public class XOriginFilter implements ContainerResponseFilter {
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
         String origin = requestContext.getHeaders().getFirst("Origin");
-        if (origin == null)
-            origin = requestContext.getUriInfo().getBaseUri().toURL().getProtocol() + "://"
-                    + requestContext.getUriInfo().getBaseUri().toURL().getHost()
-                    + (requestContext.getUriInfo().getBaseUri().toURL().getDefaultPort() < 0 ? ":" + requestContext.getUriInfo().getBaseUri().toURL().getPort() : "");
+        if (origin == null) {
+            URL url = requestContext.getUriInfo().getBaseUri().toURL();
+            origin = url.getProtocol() + "://"
+                    + url.getHost()
+                    + (url.getDefaultPort() < 0 ? ":" + url.getPort() : "");
+        }
 
         responseContext.getHeaders().add("Access-Control-Allow-Origin", origin); // "http://localhost:9000, http://localhost:8080"
         responseContext.getHeaders().add("Access-Control-Allow-Credentials", true);

@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name nodeApp.controller:UserCtrl
@@ -17,9 +16,10 @@ angular.module('nodeApp')
       $scope.profile = userService.getProfile();
     }
 
-    $scope.user = null;
+    $scope.user = {};
     $scope.uploadSettings = {};
     $scope.status = null;
+    $scope.user.imgUrl = 'http://placehold.it/100x100';
 
     $scope.updateHr = function() {
       if ($scope.profile.linkHr && $scope.profile.age) {
@@ -33,8 +33,8 @@ angular.module('nodeApp')
     };
 
     function me() {
-      userService.me().then(function(user) {
-        $scope.user = user;
+      userService.me().then(function(result) {
+        $scope.user = result.data;
       });
     }
 
@@ -51,9 +51,44 @@ angular.module('nodeApp')
     };
 
     $scope.setUserProfile = function($event) {
-      $event.preventDefault();
+      if ($event) {
+        $event.preventDefault();
+      }
       userService.useLocalStorage($scope.localStorage);
       userService.saveProfile($scope.profile);
+    };
+
+    $scope.saveUser = function($event) {
+      if ($event) {
+        $event.preventDefault();
+      }
+
+      console.log($scope.user.imgData);
+      var data;
+      if ($scope.user.imgData) {
+        data = new FormData();
+        if ($scope.user.imgData) {
+          data.append('img', $scope.user.imgData);
+        }
+
+        var meta = {};
+        angular.forEach(angular.element('input', $event.target), function(input) {
+          input = angular.element(input);
+          if (input.attr('name') && input.attr('type')) {
+            if (input.attr('type') === 'text') {
+              meta[input.attr('name')] = input.val();
+            }
+          }
+        });
+        data.append('user', angular.toJson(meta));
+      } else {
+        data = $scope.user;
+      }
+
+      userService.update(data).then(function(result) {
+        console.log($event);
+        console.log(result);
+      });
     };
 
   }]);

@@ -5,6 +5,8 @@ import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
@@ -16,4 +18,7 @@ public class Utils {
     public static final JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
     public static final ObjectMapper jacksonObjectMapper = new ObjectMapper();
     public static final MemcacheService memcacheService = MemcacheServiceFactory.getMemcacheService();
+    public static final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+
+
 }

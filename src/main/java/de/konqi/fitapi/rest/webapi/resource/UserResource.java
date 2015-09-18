@@ -1,5 +1,8 @@
 package de.konqi.fitapi.rest.webapi.resource;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.UploadOptions;
+import de.konqi.fitapi.AppengineEnv;
 import de.konqi.fitapi.Constants;
 import de.konqi.fitapi.Utils;
 import de.konqi.fitapi.auth.*;
@@ -8,7 +11,9 @@ import de.konqi.fitapi.db.repository.SessionRepository;
 import de.konqi.fitapi.db.repository.UserRepository;
 import de.konqi.fitapi.rest.webapi.WebApiUser;
 import de.konqi.fitapi.rest.webapi.domain.LoginCallbackResponse;
+import de.konqi.fitapi.rest.webapi.domain.User;
 import org.apache.http.HttpStatus;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +31,8 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.security.Principal;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,34 +42,92 @@ import java.util.Map;
 @PermitAll
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class User {
-    private static final Logger logger = LoggerFactory.getLogger(User.class);
+public class UserResource {
+    private static final Logger logger = LoggerFactory.getLogger(UserResource.class);
 
     @GET
     @Path("/me")
     @RolesAllowed("user")
-    public Response me(@Context HttpServletResponse response, @Context SecurityContext sc) {
+    public Response me(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context SecurityContext sc) {
         Principal userPrincipal = sc.getUserPrincipal();
-        de.konqi.fitapi.common.User user = (de.konqi.fitapi.common.User) userPrincipal;
+        User user = new User((de.konqi.fitapi.common.User) userPrincipal);
+        StringBuffer requestURL = request.getRequestURL();
+        String base = requestURL.substring(0, requestURL.indexOf("/", 8));
+        user.setProfileImg(base + request.getServletPath() + "/img/" + user.getProfileImgBlobKey());
+
         return Response.ok().entity(user).build();
+    }
+
+    @GET
+    @Path("/getUpdateUrl")
+    @RolesAllowed("user")
+    public Response getUpdateUrl(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context SecurityContext sc) {
+        UploadOptions uploadOptions = UploadOptions.Builder.withMaxUploadSizeBytes(500 * 1024).maxUploadSizeBytesPerBlob(500 * 1024);
+        String uploadUrlStr = Utils.blobstoreService.createUploadUrl(request.getServletPath() + "/user/postUpdateUrl", uploadOptions);
+        if (AppengineEnv.DEBUG) {
+            uploadUrlStr = uploadUrlStr.replaceAll(System.getenv("COMPUTERNAME").toLowerCase(), "localhost");
+        }
+
+        Map<String, String> uploadUrl = Collections.singletonMap("updateUrl", uploadUrlStr);
+
+        return Response.ok().entity(uploadUrl).build();
+    }
+
+    @POST
+    @Path("/postUpdateUrl")
+    @RolesAllowed("user")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response postUpdateUrl(FormDataMultiPart multiPart, @Context HttpServletRequest request, @Context HttpServletResponse response, @Context SecurityContext sc) {
+        Map<String, List<BlobKey>> uploads = Utils.blobstoreService.getUploads(request);
+        if (uploads.size() == 1) {
+            for (String s : uploads.keySet()) {
+                List<BlobKey> blobKeys = uploads.get(s);
+                if (blobKeys.size() == 1) {
+                    BlobKey blobKey = blobKeys.get(0);
+
+                    try {
+                        User user = Utils.jacksonObjectMapper.readValue(multiPart.getField("user").getValue(), User.class);
+                        user.setProfileImgBlobKey(blobKey.getKeyString());
+
+                        return updateProfile(user, request, response, sc);
+                    } catch (IOException ignored) {
+                    }
+                }
+            }
+        }
+
+        for (List<BlobKey> blobKeys : uploads.values()) {
+            for (BlobKey blobKey : blobKeys) {
+                Utils.blobstoreService.delete(blobKey);
+            }
+        }
+
+
+        return Response.status(HttpStatus.SC_BAD_REQUEST).build();
     }
 
     @POST
     @Path("/me")
     @RolesAllowed("user")
-    public Response updateProfile(de.konqi.fitapi.db.domain.User updateUser, @Context HttpServletResponse response, @Context SecurityContext sc) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateProfile(User updateUser, @Context HttpServletRequest request, @Context HttpServletResponse response, @Context SecurityContext sc) {
         Principal userPrincipal = sc.getUserPrincipal();
         de.konqi.fitapi.common.User user = (de.konqi.fitapi.common.User) userPrincipal;
 
-        user.setName(updateUser.getName());
-        user.setEmail(updateUser.getEmail());
+        // Override provided id (if any)
+        updateUser.setId(user.getId());
 
-        if(UserRepository.updateUser(user)){
-            return Response.ok().entity(user).build();
+        /*if(updateUser.getImgUrl() != null){
+            blobstoreService.getUploads()
+        }*/
+
+        if (UserRepository.updateUser(updateUser)) {
+            return me(request, response, sc);
         }
 
         return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
     }
+
 
     @PUT
     @RolesAllowed("user")
@@ -72,7 +137,7 @@ public class User {
         String password = params.get("password");
         String username = params.get("username");
         logger.info("New password is: " + password);
-        if(UserRepository.setUploadUser(webApiUser, username, password)){
+        if (UserRepository.setUploadUser(webApiUser, username, password)) {
             return Response.ok().build();
         }
 
@@ -164,7 +229,6 @@ public class User {
 
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
-
 
 
 }

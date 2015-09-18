@@ -8,10 +8,11 @@
  * Service in the nodeApp.
  */
 angular.module('nodeApp')
-  .factory('userService', ['$http', '$q', '$window', '$interval', 'storageService', function userService($http, $q, $window, $interval, storageService) {
+  .factory('userService', ['$http', '$q', '$window', '$interval', 'storageService', 'apiLocation', function userService($http, $q, $window, $interval, storageService, apiLocation) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var sessionId = null;
-    var baseUri = 'http://localhost:8080/web/api/user';
+
+    var baseUri = apiLocation + '/web/api/user';
 
     var loginDeferred = null;
     var loginIntervalPromise = null;
@@ -21,10 +22,9 @@ angular.module('nodeApp')
       // check event origin
       var originUrl = new URL(event.origin);
       if (originUrl.protocol !== window.location.protocol || originUrl.hostname !== window.location.hostname) {
+        console.log('origin mismatch', event);
         return;
       }
-
-      console.log(originUrl, window.location);
 
       // read response data
       var data = angular.fromJson(event.data);
@@ -46,9 +46,7 @@ angular.module('nodeApp')
     return {
       'me': function() {
         var deferred = $q.defer();
-        $http.get(baseUri + '/me', {
-          'withCredentials': true
-        }).then(function(result) {
+        $http.get(baseUri + '/me').then(function(result) {
           deferred.resolve(result);
         }, function(error) {
           deferred.reject(error);
@@ -56,15 +54,38 @@ angular.module('nodeApp')
 
         return deferred.promise;
       },
-      'update': function(user) {
+      'update': function(data) {
         var deferred = $q.defer();
-        $http.post(baseUri + '/me', user, {
-          'withCredentials': true
-        }).then(function(result) {
-          deferred.resolve(result);
-        }, function(error) {
-          deferred.reject(error);
-        });
+        console.log(data, data.append, typeof data.append);
+
+        if (data && data.append && typeof data.append === 'function') {
+          // Update via FormData
+          $http.get(baseUri + '/getUpdateUrl').then(function(result) {
+            $http.post(result.data.updateUrl, data, {
+              headers: {
+                'Content-Type': undefined
+              },
+              // transformRequest: function(data) { return data; }
+            }).then(function(result) {
+              console.log(result);
+              deferred.resolve(result);
+            }, function(error) {
+              console.log(error);
+              deferred.reject(error);
+            });
+          }, function(error) {
+            deferred.reject(error);
+          });
+        } else {
+          // Update via json data
+          $http.post(baseUri + '/me', data).then(function(result) {
+            deferred.resolve(result);
+          }, function(error) {
+            deferred.reject(error);
+          });
+
+
+        }
 
         return deferred.promise;
       },
@@ -94,8 +115,6 @@ angular.module('nodeApp')
         $http.put(baseUri + '/uploadUser', {
           'username': username,
           'password': password
-        }, {
-          'withCredentials': true
         }).then(function(result) {
           deferred.resolve(result);
         }, function(error) {

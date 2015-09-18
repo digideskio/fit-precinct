@@ -17,13 +17,18 @@ public class User implements java.security.Principal {
     private Long id;
     private String name;
     private String email;
+    @JsonIgnore
     private List<String> roles = new ArrayList<>();
+
+    @JsonIgnore
+    private String profileImgBlobKey;
 
     public User(User user) {
         this.id = user.id;
         this.name = user.name;
         this.email = user.email;
         this.roles = user.roles;
+        this.profileImgBlobKey = user.profileImgBlobKey;
     }
 
     public User() {
@@ -61,5 +66,13 @@ public class User implements java.security.Principal {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getProfileImgBlobKey() {
+        return profileImgBlobKey;
+    }
+
+    public void setProfileImgBlobKey(String profileImgBlobKey) {
+        this.profileImgBlobKey = profileImgBlobKey;
     }
 }

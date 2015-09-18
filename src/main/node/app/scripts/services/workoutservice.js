@@ -8,9 +8,9 @@
  * Service in the nodeApp.
  */
 angular.module('nodeApp')
-  .service('workoutService', ['$http', '$q', function workoutService($http, $q) {
+  .service('workoutService', ['$http', '$q', 'apiLocation', function workoutService($http, $q, apiLocation) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var baseUri = 'http://localhost:8080/web/api/workout';
+    var baseUri = apiLocation + '/web/api/workout';
 
     var list = function(since, until) {
       var deferred = $q.defer();
