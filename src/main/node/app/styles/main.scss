@@ -11,17 +11,46 @@
 @import "info-box";
 @import "login";
 @import "bootstrap-social";
-
 body {
   text-rendering: optimizeLegibility;
   background-color: $light_gray;
 }
 
 .profile-user-img {
-    margin: 0 auto;
-    width: 100px;
-    height: 100px;
-    padding: 3px;
-    border: 3px solid #d2d6de;
+  margin: 0 auto;
+  width: 100px;
+  height: 100px;
+  padding: 3px;
+  border: 3px solid #d2d6de;
 }
 
+.form-control {
+  transition: border-color ease-in-out .2s, box-shadow ease-in-out .2s;
+}
+
+.form-control-wrapper {
+  position: relative;
+  display: block;
+  margin: 15px 0 0px 0;
+  .form-control {
+    display: block;
+    // height: 28px;
+    float: none;
+    &:focus,  &:not(.empty){
+      & ~ .floating-label {
+        font-size: 10px;
+        top: -10px;
+        opacity: 1;
+      }
+    }
+  }
+  .floating-label {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+    top: 4px;
+    font-size: 16px;
+    height: 100%;
+    transition: .2s ease all;
+  }
+}

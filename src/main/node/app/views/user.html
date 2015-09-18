@@ -5,20 +5,26 @@
       <form ng-submit="saveUser($event)" method="post" enctype="multipart/form-data">
         <div class="box-body box-profile">
           <div img-upload img-input-name="img" img-src="user.profileImg" img-data="user.imgData"><img class="profile-user-img img-responsive img-circle" ng-src="{{user.profileImg}}" alt="User profile picture"></div>
-          <h3 class="profile-username text-center"><input type="text" class="form-control text-center" ng-model="user.name" placeholder="Name" name="name"></h3>
-          <h2 class="text-center"><input type="text" class="form-control text-center" ng-model="user.email" placeholder="Email" readonly></h2>
+          <div class="form-control-wrapper profile-username text-center">
+            <input type="text" class="form-control text-center" ng-model="user.name" ng-model-ext name="name">
+            <div class="floating-label">Name</div>
+          </div>
+          <div class="form-control-wrapper profile-username text-center">
+            <input type="text" class="form-control text-center" ng-model="user.email" ng-model-ext readonly>
+            <div class="floating-label">Email</div>
+          </div>
           <!-- <p class="text-muted text-center">Athlete</p> -->
           <ul class="list-group list-group-unbordered">
             <li class="list-group-item">
-              <div class="input-group">
-                <input type="text" class="form-control text-center" ng-model="profile.age" placeholder="age" ng-change="updateHr()">
-                <div class="input-group-addon">years</div>
+              <div class="form-control-wrapper">
+                <input type="text" class="form-control text-center" ng-model="profile.age" ng-model-ext ng-change="updateHr()">
+                <div class="floating-label">Age</div>
               </div>
             </li>
             <li class="list-group-item">
-              <div class="input-group">
-                <input type="text" class="form-control text-center" ng-model="profile.weight" placeholder="weight">
-                <div class="input-group-addon">kilos</div>
+              <div class="form-control-wrapper">
+                <input type="text" class="form-control text-center" ng-model="profile.weight" ng-model-ext>
+                <div class="floating-label">Weight</div>
               </div>
             </li>
           </ul>
@@ -40,17 +46,13 @@
           </div>
           <div class="box-body">
             <form class="form-horizontal">
-              <div class="form-group">
-                <label for="inputUsernamePassword" class="col-sm-4 control-label">user name</label>
-                <div class="col-sm-8">
-                  <input id="inputUsernamePassword" class="form-control" type="text" name="username" ng-model="uploadSettings.username" />
-                </div>
+              <div class="form-control-wrapper">
+                <input id="inputUsernamePassword" class="form-control" type="text" name="username" ng-model="uploadSettings.username" ng-model-ext/>
+                <label for="inputUsernamePassword" class="floating-label">user name</label>
               </div>
-              <div class="form-group">
-                <label for="inputUploadPassword" class="col-sm-4 control-label">upload password</label>
-                <div class="col-sm-8">
-                  <input id="inputUploadPassword" class="form-control" type="text" name="password" ng-model="uploadSettings.password" />
-                </div>
+              <div class="form-control-wrapper">
+                <input id="inputUploadPassword" class="form-control" type="text" name="password" ng-model="uploadSettings.password" ng-model-ext />
+                <label for="inputUploadPassword" class="floating-label">upload password</label>
               </div>
               <button class="btn btn-primary pull-right" type="submit" ng-click="setUploadSettings($event)">Set</button>
             </form>
