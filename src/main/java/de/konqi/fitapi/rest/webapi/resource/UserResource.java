@@ -6,6 +6,7 @@ import de.konqi.fitapi.AppengineEnv;
 import de.konqi.fitapi.Constants;
 import de.konqi.fitapi.Utils;
 import de.konqi.fitapi.auth.*;
+import de.konqi.fitapi.db.OfyService;
 import de.konqi.fitapi.db.repository.OAuthLoginRepository;
 import de.konqi.fitapi.db.repository.SessionRepository;
 import de.konqi.fitapi.db.repository.UserRepository;
@@ -51,6 +52,9 @@ public class UserResource {
     public Response me(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context SecurityContext sc) {
         Principal userPrincipal = sc.getUserPrincipal();
         User user = new User((de.konqi.fitapi.common.User) userPrincipal);
+        if(!request.getRequestURI().endsWith("/me") && request.getMethod().equalsIgnoreCase("get")){
+            user = OfyService.ofy().load().entity(user).now();
+        }
         StringBuffer requestURL = request.getRequestURL();
         String base = requestURL.substring(0, requestURL.indexOf("/", 8));
         user.setProfileImg(base + request.getServletPath() + "/img/" + user.getProfileImgBlobKey());

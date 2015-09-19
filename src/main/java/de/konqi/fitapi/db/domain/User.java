@@ -6,10 +6,14 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by konqi on 17.08.2015.
+ * Objectify entity for users
+ *
+ * @author konqi
  */
 @Entity
 public class User implements java.security.Principal {
@@ -17,6 +21,7 @@ public class User implements java.security.Principal {
     private Long id;
     private String name;
     private String email;
+    private Map<String, String> profileData = null; // new HashMap<>();
     @JsonIgnore
     private List<String> roles = new ArrayList<>();
 
@@ -74,5 +79,13 @@ public class User implements java.security.Principal {
 
     public void setProfileImgBlobKey(String profileImgBlobKey) {
         this.profileImgBlobKey = profileImgBlobKey;
+    }
+
+    public Map<String, String> getProfileData() {
+        return profileData;
+    }
+
+    public void setProfileData(Map<String, String> profileData) {
+        this.profileData = profileData;
     }
 }

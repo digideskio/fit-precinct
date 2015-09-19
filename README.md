@@ -1,7 +1,7 @@
 fit-precinct
 =============================
 
-Right now this is an implementation of the [openfitapi](openfitapi.com) specification for Google AppEngine. 
+Right now this is an implementation of the [openfitapi](http://openfitapi.com) specification for Google AppEngine. 
 Despite its somewhat flawed design and being slightly outdated the API is supported by [IpBike](http://www.iforpowell.com/cms/index.php?page=ipbike).
 
 I will create a working prototype that allows uploading data through IpBike (or any other application that implements openfitapi).

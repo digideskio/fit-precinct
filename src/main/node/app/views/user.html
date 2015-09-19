@@ -4,7 +4,7 @@
     <div class="box box-primary">
       <form ng-submit="saveUser($event)" method="post" enctype="multipart/form-data">
         <div class="box-body box-profile">
-          <div img-upload img-input-name="img" img-src="user.profileImg" img-data="user.imgData"><img class="profile-user-img img-responsive img-circle" ng-src="{{user.profileImg}}" alt="User profile picture"></div>
+          <div img-upload img-input-name="img" img-src="user.profileImg" img-data="imgData"><img class="profile-user-img img-responsive img-circle" ng-src="{{user.profileImg}}" alt="User profile picture"></div>
           <div class="form-control-wrapper profile-username text-center">
             <input type="text" class="form-control text-center" ng-model="user.name" ng-model-ext name="name">
             <div class="floating-label">Name</div>
@@ -16,19 +16,11 @@
           <!-- <p class="text-muted text-center">Athlete</p> -->
           <ul class="list-group list-group-unbordered">
             <li class="list-group-item">
-              <div class="form-control-wrapper">
-                <input type="text" class="form-control text-center" ng-model="profile.age" ng-model-ext ng-change="updateHr()">
-                <div class="floating-label">Age</div>
-              </div>
             </li>
             <li class="list-group-item">
-              <div class="form-control-wrapper">
-                <input type="text" class="form-control text-center" ng-model="profile.weight" ng-model-ext>
-                <div class="floating-label">Weight</div>
-              </div>
             </li>
           </ul>
-          <button type="submit" class="btn btn-primary btn-block"><b>Save</b></a>
+          <button type="submit" class="btn btn-primary btn-block"><b>Save</b></button>
         </div>
       </form>
       <div class="box-footer text-center">
@@ -45,7 +37,7 @@
             <h3 class="box-title">Upload settings</h3>
           </div>
           <div class="box-body">
-            <form class="form-horizontal">
+            <form>
               <div class="form-control-wrapper">
                 <input id="inputUsernamePassword" class="form-control" type="text" name="username" ng-model="uploadSettings.username" ng-model-ext/>
                 <label for="inputUsernamePassword" class="floating-label">user name</label>
@@ -54,7 +46,10 @@
                 <input id="inputUploadPassword" class="form-control" type="text" name="password" ng-model="uploadSettings.password" ng-model-ext />
                 <label for="inputUploadPassword" class="floating-label">upload password</label>
               </div>
-              <button class="btn btn-primary pull-right" type="submit" ng-click="setUploadSettings($event)">Set</button>
+              <div class="row">
+                <div class="col-sm-12">&nbsp;</div>
+              </div>
+              <button class="btn btn-primary btn-block" type="submit" ng-click="setUploadSettings($event)"><b>Save</b></button>
             </form>
           </div>
           <!-- /.box-body -->
@@ -67,52 +62,83 @@
           </div>
           <div class="box-body">
             <form class="form-horizontal">
-              <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9">
-                  <input id="inputHrLink" type="checkbox" ng-model="profile.linkHr" ng-change="updateHr()" /> Link Age/Heartrate
-                </div>
-              </div>
               <div class="row">
-                <div class="col-sm-3 control-label">
-                  Heartrate Zones
+                <div class="col-sm-6">
+                  <div class="form-control-wrapper">
+                    <input type="text" class="form-control text-center" ng-model="user.profileData.age" ng-model-ext ng-change="updateHr()">
+                    <div class="floating-label">Age (years)</div>
+                  </div>
                 </div>
-                <div class="col-sm-9">
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <label for="" class="control-label">100%</label>
-                      <input class="form-control" type="text" ng-model="profile.hr100" />
-                    </div>
-                    <div class="col-sm-4">
-                      <label for="" class="control-label">90%</label>
-                      <input class="form-control" type="text" ng-model="profile.hr90" />
-                    </div>
-                    <div class="col-sm-4">
-                      <label for="" class="control-label">80%</label>
-                      <input class="form-control" type="text" ng-model="profile.hr80" />
-                    </div>
-                    <div class="col-sm-4">
-                      <label for="" class="control-label">70%</label>
-                      <input class="form-control" type="text" ng-model="profile.hr70" />
-                    </div>
-                    <div class="col-sm-4">
-                      <label for="" class="control-label">60%</label>
-                      <input class="form-control" type="text" ng-model="profile.hr60" />
-                    </div>
-                    <div class="col-sm-4">
-                      <label for="" class="control-label">50%</label>
-                      <input class="form-control" type="text" ng-model="profile.hr50" />
-                    </div>
+                <div class="col-sm-6">
+                  <div class="form-control-wrapper">
+                    <input type="text" class="form-control text-center" ng-model="user.profileData.weight" ng-model-ext>
+                    <div class="floating-label">Weight (kilos)</div>
                   </div>
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-9">
-                  <input ng-if="localStorageAvailable" id="inputStorage" type="checkbox" ng-model="localStorage" /> Use local storage *
                 </div>
               </div>
-              <div class="form-group">
+              <div class="row">
                 <div class="col-sm-12">
-                  <button class="btn btn-primary pull-right" type="submit" ng-click="setUserProfile($event)">Save</button>
+                  Heartrate Zones
+                  <span class="pull-right">
+                  <input id="inputHrLink" type="checkbox" ng-model="user.profileData.linkHr" ng-change="updateHr()" /> Link Age/Heartrate
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-control-wrapper">
+                    <input class="form-control" type="text" ng-model="user.profileData.hr100" ng-model-ext />
+                    <label for="" class="floating-label">100%</label>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-control-wrapper">
+                    <input class="form-control" type="text" ng-model="user.profileData.hr90" ng-model-ext />
+                    <label for="" class="floating-label">90%</label>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-control-wrapper">
+                    <input class="form-control" type="text" ng-model="user.profileData.hr80" ng-model-ext />
+                    <label for="" class="floating-label">80%</label>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-control-wrapper">
+                    <input class="form-control" type="text" ng-model="user.profileData.hr70" ng-model-ext />
+                    <label for="" class="floating-label">70%</label>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-control-wrapper">
+                    <input class="form-control" type="text" ng-model="user.profileData.hr60" ng-model-ext />
+                    <label for="" class="floating-label">60%</label>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-control-wrapper">
+                    <input class="form-control" type="text" ng-model="user.profileData.hr50" ng-model-ext />
+                    <label for="" class="floating-label">50%</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">&nbsp;</div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <div class="checkbox">
+                    <label>
+                      <input ng-show="localStorageAvailable" id="inputStorage" type="checkbox" ng-model="useLocalStorage" /> Use local storage *
+                    </label>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <button class="btn btn-primary btn-block" type="submit" ng-click="saveUser($event)"><b>Save</b></button>
                 </div>
               </div>
             </form>
@@ -124,3 +150,4 @@
       </div>
     </div>
   </div>
+</div>

@@ -8,33 +8,31 @@
  */
 angular.module('nodeApp')
   .controller('UserCtrl', ['$scope', 'userService', function($scope, userService) {
+    $scope.useLocalStorage = false;
     $scope.localStorageAvailable = userService.localStorageAvailable();
-    if ($scope.localStorageAvailable) {
-      $scope.localStorage = true;
-
-      userService.useLocalStorage($scope.localStorage);
-      $scope.profile = userService.getProfile();
-    }
 
     $scope.user = {};
     $scope.uploadSettings = {};
     $scope.status = null;
+    $scope.imgData = null;
     $scope.user.imgUrl = 'http://placehold.it/100x100';
 
     $scope.updateHr = function() {
-      if ($scope.profile.linkHr && $scope.profile.age) {
-        $scope.profile.hr100 = (220 - $scope.profile.age).toFixed(1);
-        $scope.profile.hr90 = ($scope.profile.hr100 * 0.9).toFixed(1);
-        $scope.profile.hr80 = ($scope.profile.hr100 * 0.8).toFixed(1);
-        $scope.profile.hr70 = ($scope.profile.hr100 * 0.7).toFixed(1);
-        $scope.profile.hr60 = ($scope.profile.hr100 * 0.6).toFixed(1);
-        $scope.profile.hr50 = ($scope.profile.hr100 * 0.5).toFixed(1);
+      console.log($scope.user.profileData.linkHr && $scope.user.profileData.age);
+      if ($scope.user.profileData.linkHr && $scope.user.profileData.age) {
+        $scope.user.profileData.hr100 = (220 - $scope.user.profileData.age).toFixed(1);
+        $scope.user.profileData.hr90 = ($scope.user.profileData.hr100 * 0.9).toFixed(1);
+        $scope.user.profileData.hr80 = ($scope.user.profileData.hr100 * 0.8).toFixed(1);
+        $scope.user.profileData.hr70 = ($scope.user.profileData.hr100 * 0.7).toFixed(1);
+        $scope.user.profileData.hr60 = ($scope.user.profileData.hr100 * 0.6).toFixed(1);
+        $scope.user.profileData.hr50 = ($scope.user.profileData.hr100 * 0.5).toFixed(1);
       }
     };
 
     function me() {
       userService.me().then(function(result) {
         $scope.user = result.data;
+        $scope.useLocalStorage = userService.useLocalStorage();
       });
     }
 
@@ -50,42 +48,20 @@ angular.module('nodeApp')
       });
     };
 
-    $scope.setUserProfile = function($event) {
-      if ($event) {
-        $event.preventDefault();
-      }
-      userService.useLocalStorage($scope.localStorage);
-      userService.saveProfile($scope.profile);
-    };
-
     $scope.saveUser = function($event) {
       if ($event) {
         $event.preventDefault();
       }
+      userService.useLocalStorage($scope.useLocalStorage);
 
-      console.log($scope.user.imgData);
       var data;
-      if ($scope.user.imgData) {
+      if ($scope.imgData) {
         data = new FormData();
-        if ($scope.user.imgData) {
-          data.append('img', $scope.user.imgData);
-        }
-
-        var meta = {};
-        angular.forEach(angular.element('input', $event.target), function(input) {
-          input = angular.element(input);
-          if (input.attr('name') && input.attr('type')) {
-            if (input.attr('type') === 'text') {
-              meta[input.attr('name')] = input.val();
-            }
-          }
-        });
-        data.append('user', angular.toJson(meta));
-      } else {
-        data = $scope.user;
+        data.append('img', $scope.imgData);
       }
 
-      userService.update(data).then(function(result) {
+      userService.update($scope.user, data).then(function(result) {
+        $scope.user = result.data;
         console.log($event);
         console.log(result);
       });

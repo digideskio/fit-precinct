@@ -10,13 +10,15 @@
 angular.module('nodeApp')
   .factory('userService', ['$http', '$q', '$window', '$interval', 'storageService', 'apiLocation', function userService($http, $q, $window, $interval, storageService, apiLocation) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+    var opt = {
+      useLocalStorage: false
+    };
     var sessionId = null;
 
     var baseUri = apiLocation + '/web/api/user';
 
     var loginDeferred = null;
     var loginIntervalPromise = null;
-    var useLocalStorage = false;
 
     var receiveMessage = function(event) {
       // check event origin
@@ -43,10 +45,52 @@ angular.module('nodeApp')
       }
     };
 
+    function getProfile() {
+      if (localStorageAvailable()) {
+        return storageService.get('profile');
+      }
+    }
+
+    function saveProfile(profile) {
+      if (localStorageAvailable()) {
+        storageService.put('profile', profile);
+      }
+    }
+
+    function localStorageAvailable() {
+      return storageService.available();
+    }
+
+    function separateProfileFromUser(user) {
+      if (useLocalStorage()) {
+        // save profile to localStorage and remove user profile before server request
+        saveProfile(user.profileData);
+        delete user.profileData;
+      }
+
+      // If local storage is not used profile data will be sent to the server
+      return user;
+    }
+
+    function useLocalStorage(value) {
+      if (typeof value === 'undefined') {
+        return opt.useLocalStorage;
+      }
+      console.log('localStorage switched ' + (value ? 'on' : 'off'));
+      opt.useLocalStorage = value;
+    }
+
     return {
       'me': function() {
         var deferred = $q.defer();
         $http.get(baseUri + '/me').then(function(result) {
+          if (result.data.profileData) {
+            // profile data available on server side
+            useLocalStorage(false);
+          } else if (localStorageAvailable()) {
+            result.data.profileData = getProfile() || {};
+            useLocalStorage(true);
+          }
           deferred.resolve(result);
         }, function(error) {
           deferred.reject(error);
@@ -54,12 +98,13 @@ angular.module('nodeApp')
 
         return deferred.promise;
       },
-      'update': function(data) {
+      'update': function(user, data) {
         var deferred = $q.defer();
-        console.log(data, data.append, typeof data.append);
+        user = separateProfileFromUser(user);
 
         if (data && data.append && typeof data.append === 'function') {
           // Update via FormData
+          data.append('user', angular.toJson(user));
           $http.get(baseUri + '/getUpdateUrl').then(function(result) {
             $http.post(result.data.updateUrl, data, {
               headers: {
@@ -68,6 +113,7 @@ angular.module('nodeApp')
               // transformRequest: function(data) { return data; }
             }).then(function(result) {
               console.log(result);
+              result.profileData = result.profileData || getProfile();
               deferred.resolve(result);
             }, function(error) {
               console.log(error);
@@ -78,12 +124,12 @@ angular.module('nodeApp')
           });
         } else {
           // Update via json data
-          $http.post(baseUri + '/me', data).then(function(result) {
+          $http.post(baseUri + '/me', user).then(function(result) {
+            result.data.profileData = result.data.profileData || getProfile();
             deferred.resolve(result);
           }, function(error) {
             deferred.reject(error);
           });
-
 
         }
 
@@ -123,21 +169,7 @@ angular.module('nodeApp')
 
         return deferred.promise;
       },
-      'localStorageAvailable': function() {
-        return storageService.available();
-      },
-      'useLocalStorage': function(value) {
-        useLocalStorage = value;
-      },
-      'saveProfile': function(profile) {
-        if (useLocalStorage) {
-          storageService.put('profile', profile);
-        }
-      },
-      'getProfile': function() {
-        if (useLocalStorage) {
-          return storageService.get('profile');
-        }
-      }
+      'localStorageAvailable': localStorageAvailable,
+      'useLocalStorage': useLocalStorage
     };
   }]);

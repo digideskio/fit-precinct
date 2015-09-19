@@ -56,10 +56,14 @@ public class UserRepository {
         User dbUser = OfyService.ofy().load().key(Key.create(User.class, user.getId())).safe();
 
         dbUser.setName(user.getName());
-        if(dbUser.getProfileImgBlobKey() != null){
-            Utils.blobstoreService.delete(new BlobKey(dbUser.getProfileImgBlobKey()));
+        dbUser.setProfileData(user.getProfileData());
+
+        if(user.getProfileImgBlobKey() != null) {
+            if (dbUser.getProfileImgBlobKey() != null) {
+                Utils.blobstoreService.delete(new BlobKey(dbUser.getProfileImgBlobKey()));
+            }
+            dbUser.setProfileImgBlobKey(user.getProfileImgBlobKey());
         }
-        dbUser.setProfileImgBlobKey(user.getProfileImgBlobKey());
         // dbUser.setEmail(user.getEmail());
 
         Key<User> now = OfyService.ofy().save().entity(dbUser).now();
