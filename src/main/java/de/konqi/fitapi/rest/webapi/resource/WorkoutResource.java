@@ -1,5 +1,6 @@
 package de.konqi.fitapi.rest.webapi.resource;
 
+import de.konqi.fitapi.db.domain.Workout;
 import de.konqi.fitapi.db.repository.WorkoutRepository;
 import de.konqi.fitapi.rest.webapi.WebApiUser;
 import org.apache.http.HttpStatus;
@@ -84,6 +85,23 @@ public class WorkoutResource {
         }
 
         return Response.status(HttpStatus.SC_FORBIDDEN).build();
+    }
+
+    @DELETE
+    @Path("/delete/{workoutId}")
+    public Response deleteWorkout(@PathParam("workoutId") Long workoutId, @Context SecurityContext sc) {
+        WebApiUser webApiUser = (WebApiUser) sc.getUserPrincipal();
+        if (WorkoutRepository.deleteWorkoutForUser(webApiUser, workoutId)) {
+            Response.accepted().build();
+        }
+
+        return Response.status(HttpStatus.SC_FORBIDDEN).build();
+    }
+
+    @POST
+    @Path("/insert")
+    public Response insertWorkout(Workout workout, @Context SecurityContext sc) {
+        return Response.notModified().build();
     }
 
 }

@@ -63,4 +63,8 @@ public class WorkoutRepository {
         return false;
     }
 
+    public static boolean deleteWorkoutForUser(User user, Long workoutId) {
+        OfyService.ofy().delete().key(Key.create(Key.create(user), Workout.class, workoutId)).now();
+        return true;
+    }
 }

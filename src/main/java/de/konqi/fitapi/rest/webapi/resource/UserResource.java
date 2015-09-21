@@ -59,6 +59,8 @@ public class UserResource {
         String base = requestURL.substring(0, requestURL.indexOf("/", 8));
         user.setProfileImg(base + request.getServletPath() + "/img/" + user.getProfileImgBlobKey());
 
+        // logger.info("hot swap test");
+
         return Response.ok().entity(user).build();
     }
 

@@ -6,12 +6,15 @@ import de.konqi.fitapi.rest.webapi.resource.BlobResource;
 import de.konqi.fitapi.rest.webapi.resource.UserResource;
 import de.konqi.fitapi.rest.webapi.resource.WorkoutResource;
 import org.glassfish.jersey.filter.LoggingFilter;
+import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.MultiPartProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
 
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.FeatureContext;
 import java.util.logging.Logger;
 
 /**
@@ -28,7 +31,10 @@ public class WebApi extends ResourceConfig {
 //        register(MvcFeature.class);
         property(JspMvcFeature.TEMPLATE_BASE_PATH, "/WEB-INF/jsp");
         register(JspMvcFeature.class);
-        register(MultiPartFeature.class);
+
+        MultiPartProperties multiPartProperties = new MultiPartProperties();
+        multiPartProperties.bufferThreshold(-1);
+        register(multiPartProperties);
 
         register(OAuthRequestFilter.class);
         register(XOriginFilter.class);
