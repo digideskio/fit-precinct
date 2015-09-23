@@ -112,7 +112,6 @@ angular.module('nodeApp')
               },
               // transformRequest: function(data) { return data; }
             }).then(function(result) {
-              console.log(result);
               result.profileData = result.profileData || getProfile();
               deferred.resolve(result);
             }, function(error) {

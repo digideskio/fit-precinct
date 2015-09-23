@@ -104,6 +104,9 @@ angular.module('nodeApp')
 
     function createCharts() {
       var datasets = normalizeData('heartrate');
+      var nvdHeartrate = normalizeData('heartrate', true);
+      nvdHeartrate = mathToolbox.largestTriangleThreeBuckets(nvdHeartrate, 50);
+      nvdHeartrate = prepareDataNvd(nvdHeartrate, 1, 1/60);
       var tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
       var heartrate = prepareData(tmpData);
 
@@ -160,14 +163,64 @@ angular.module('nodeApp')
         data: [heartrate.data],
         boxtype: 'box-danger'
       });
+
+      console.log(nvdHeartrate);
+
+      $scope.nvdchart = {
+        data: [{
+          'values': nvdHeartrate
+        }],
+        options: {
+          chart: {
+            interpolate: 'cardinal',
+            showLegend: false,
+            type: 'lineChart',
+            height: 300,
+            isArea: true,
+            xAxis: {
+              axisLabel: 'Time (min)'
+            },
+            yAxis: {
+              axisLabel: 'Heartrate (bpm)'
+            }
+          }
+        }
+      };
     }
 
-    function normalizeData(dataType) {
+    function normalizeData(dataType, parse, annotate) {
+      annotate = annotate || false;
+      parse = parse || false;
       var datasets = [];
       angular.forEach($scope.workout[dataType], function(data) {
-        datasets.push([data.offset, data.data[0]]);
+        if (parse) {
+          if (annotate) {
+            datasets.push({
+              x: data.offset,
+              y: parseFloat(data.data[0])
+            });
+          } else {
+            datasets.push([data.offset, parseFloat(data.data[0])]);
+          }
+        } else {
+          datasets.push([data.offset, data.data[0]]);
+        }
       });
       return datasets;
+    }
+
+    function prepareDataNvd(datasets, factorY, factorX) {
+      factorY = factorY || 1;
+      factorX = factorX || 1;
+      var data = [];
+      angular.forEach(datasets, function(dataset) {
+        data.push({
+          x: dataset[0] * factorX,
+          y: parseFloat(dataset[1] * factorY)
+        });
+      });
+
+      return data;
     }
 
     function prepareData(datasets, factor) {
@@ -176,7 +229,7 @@ angular.module('nodeApp')
       var data = [];
       angular.forEach(datasets, function(dataset) {
         labels.push(dataset[0]);
-        data.push(dataset[1] * factor);
+        data.push(parseFloat(dataset[1] * factor));
       });
 
       return {

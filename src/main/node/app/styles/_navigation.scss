@@ -105,6 +105,11 @@
 @media(min-width: 1330px) {
   .navbar .navbar-collapse {
     margin-left: 0;
+    span.glyphicon,
+    span.fa {
+      margin-right: 25px;
+      float: none;
+    }
   }
   .main {
     left: 200px;
