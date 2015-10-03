@@ -15,9 +15,7 @@ angular
     'ngResource',
     'ui.router',
     'ngSanitize',
-    'ngTouch',
-    'chart.js',
-    'nvd3'
+    'ngTouch'
   ])
   .config(['$stateProvider', '$locationProvider', '$httpProvider', function($stateProvider, $locationProvider, $httpProvider) {
     $stateProvider
