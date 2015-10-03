@@ -1,5 +1,30 @@
 'use strict';
 
+window.debounce = window.debounce ||
+  // Returns a function, that, as long as it continues to be invoked, will not
+  // be triggered. The function will be called after it stops being called for
+  // N milliseconds. If `immediate` is passed, trigger the function on the
+  // leading edge, instead of the trailing.
+  function(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this,
+        args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) {
+          func.apply(context, args);
+        }
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) {
+        func.apply(context, args);
+      }
+    };
+  };
+
 /**
  * @ngdoc directive
  * @name nodeApp.directive:d3chart
@@ -29,9 +54,11 @@ angular.module('nodeApp')
             draw(newVal, scope.rightOptions, 'right');
           }
         });
-        element.on('resize', function(e) {
-          console.log(e);
-        });
+
+        var debounceResize = window.debounce(function(e) {
+          console.log('This is where i should redraw the chart.', e);
+        }, 250);
+        angular.element(window).on('resize', debounceResize);
 
         var initialHeight = attrs.height || 290;
         var margin = {
@@ -117,7 +144,7 @@ angular.module('nodeApp')
 
             if (options.descriptionAlign === 'right') {
               sides[side].axis.gy
-                .attr('transform', 'translate(' + width * (side === 'right') + ',0)') // translate right scales to the right
+                .attr('transform', 'translate(' + width * (side === 'right') + ',0)'); // translate right scales to the right
               text.style('text-anchor', 'end')
                 .attr('transform', 'translate(' + margin.right + ',0)');
 
@@ -126,7 +153,6 @@ angular.module('nodeApp')
                 .attr('cx', -Math.ceil(text.node().getBBox().width) + margin.right - 8);
 
             } else {
-              sides[side].axis.gy
               text.style('text-anchor', 'start')
                 .attr('transform', 'translate(' + -margin.left + ',0)');
 
@@ -154,19 +180,19 @@ angular.module('nodeApp')
           createYAxis(options, side);
 
           var line = d3.svg.line()
-            .x(function(d, i) {
+            .x(function(d/*, i*/) {
               return xAxis.scale(d.offset);
             })
-            .y(function(d, i) {
+            .y(function(d/*, i*/) {
               return sides[side].scale(d.data[0] * options.multiplier);
             });
 
           var area = d3.svg.area()
-            .x(function(d, i) {
+            .x(function(d/*, i*/) {
               return xAxis.scale(d.offset);
             })
             .y0(height)
-            .y1(function(d, i) {
+            .y1(function(d/*, i*/) {
               return sides[side].scale(d.data[0] * options.multiplier);
             });
 

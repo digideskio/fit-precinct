@@ -92,7 +92,7 @@ public class WorkoutResource {
     public Response deleteWorkout(@PathParam("workoutId") Long workoutId, @Context SecurityContext sc) {
         WebApiUser webApiUser = (WebApiUser) sc.getUserPrincipal();
         if (WorkoutRepository.deleteWorkoutForUser(webApiUser, workoutId)) {
-            Response.accepted().build();
+            return Response.accepted().build();
         }
 
         return Response.status(HttpStatus.SC_FORBIDDEN).build();

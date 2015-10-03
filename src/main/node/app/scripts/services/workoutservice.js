@@ -97,12 +97,25 @@ angular.module('nodeApp')
 
       return deferred.promise;
     };
+    var deleteWorkout = function(id){
+      var deferred = $q.defer();
+      $http.delete(baseUri + '/delete/' + id, {
+        'withCredentials': true
+      }).then(function(result) {
+        deferred.resolve(result);
+      }, function(error) {
+        deferred.reject(error);
+      });
+
+      return deferred.promise;      
+    };
 
     return {
       'list': list,
       'listLast': listLast,
       'get': get,
       'update': update,
-      'load': load
+      'load': load,
+      'delete': deleteWorkout
     };
   }]);

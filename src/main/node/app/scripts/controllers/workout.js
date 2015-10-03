@@ -8,7 +8,7 @@
  * Controller of the nodeApp
  */
 angular.module('nodeApp')
-  .controller('WorkoutCtrl', ['$scope', '$stateParams', '$q', 'workoutService', 'mathToolbox', 'openlayersService', function($scope, $stateParams, $q, workoutService, mathToolbox, olService) {
+  .controller('WorkoutCtrl', ['$scope', '$state', '$stateParams', '$q', 'workoutService', 'mathToolbox', 'openlayersService', function($scope, $state, $stateParams, $q, workoutService, mathToolbox, olService) {
     $scope.loading = true;
 
     $scope.dataset = [{
@@ -31,7 +31,7 @@ angular.module('nodeApp')
     };
     $scope.leftOptions = {
       description: 'Elevation (m)'
-    }
+    };
 
     for (var i = 0; i < 14; i += 0.5) {
       $scope.dataset[0].data.push([i, Math.sin(i)]);
@@ -50,6 +50,14 @@ angular.module('nodeApp')
       workoutService.update($scope.workoutHead).then(function(result) {
         console.log(result);
         angular.element(modal).modal('hide');
+      });
+    };
+
+    $scope.delete = function(e, modal) {
+      console.log('deleting workout ' + $scope.workoutHead.id, modal);
+      workoutService.delete($scope.workoutHead.id).then(function(result) {
+        console.log(result);
+        $state.go('workouts');
       });
     };
 
@@ -124,7 +132,6 @@ angular.module('nodeApp')
           var diffY = data.data[0] - prevY;
 
           var value = diffY / diffX;
-          // console.log(diffX, diffY, value);
           if (!isNaN(value)) {
             output.push({
               offset: data.offset,
@@ -153,7 +160,7 @@ angular.module('nodeApp')
         leftData: $scope.workout.speed,
         leftOptions: {
           multiplier: 3.6,
-          description: 'Speed (km/s)',
+          description: 'Speed (km/h)',
           interpolate: 20
         },
         rightData: $scope.workout.elevation,
@@ -169,7 +176,7 @@ angular.module('nodeApp')
         leftData: $scope.workout.speed,
         leftOptions: {
           multiplier: 3.6,
-          description: 'Speed (km/s)',
+          description: 'Speed (km/h)',
           interpolate: 20
         },
         rightData: $scope.workout.heartrate,
@@ -208,152 +215,5 @@ angular.module('nodeApp')
           interpolate: 20
         }
       });
-
-      /*      var datasets = normalizeData('heartrate');
-            var nvdHeartrate = normalizeData('heartrate', true);
-            nvdHeartrate = mathToolbox.largestTriangleThreeBuckets(nvdHeartrate, 100);
-            nvdHeartrate = prepareDataNvd(nvdHeartrate, 1, 1);
-            var tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
-            var heartrate = prepareData(tmpData);
-
-            datasets = normalizeData('cadence');
-            tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
-            var cadence = prepareData(tmpData);
-
-            datasets = normalizeData('elevation');
-            tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
-            var elevation = prepareData(tmpData);
-            var nvdElevation = normalizeData('elevation', true);
-            nvdElevation = mathToolbox.largestTriangleThreeBuckets(datasets, 100);
-            nvdElevation = prepareDataNvd(nvdElevation);
-
-            datasets = normalizeData('distance');
-            tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
-            var distance = prepareData(tmpData, 1 / 1000);
-            var derivedDatasets = mathToolbox.derive(tmpData);
-            var speed = prepareData(derivedDatasets, 3.6);
-            var nvdDistance = normalizeData('distance', true);
-            nvdDistance = mathToolbox.largestTriangleThreeBuckets(nvdDistance, 100);
-            var nvdSpeed = mathToolbox.derive(nvdDistance);
-            nvdSpeed = prepareDataNvd(nvdSpeed, 3.6, 1);
-
-
-            // var foo = plot('heartrate', 50);
-            // $scope.labels = foo.labels;
-            $scope.charts = [];
-            $scope.charts.push({
-              series: ['Distance'],
-              labels: distance.labels,
-              data: [distance.data],
-              boxtype: 'box-info',
-              options: {
-                bezierCurve: true,
-                scaleShowVerticalLines: false,
-                pointHitDetectionRadius: 1
-              }
-            });
-            if (cadence && cadence.data && cadence.data.length > 0) {
-              $scope.charts.push({
-                series: ['Cadence'],
-                labels: cadence.labels,
-                data: [cadence.data],
-                boxtype: 'box-success'
-              });
-            }
-            $scope.charts.push({
-              series: ['Elevation'],
-              labels: elevation.labels,
-              data: [elevation.data]
-            });
-            $scope.charts.push({
-              series: ['Speed'],
-              labels: speed.labels,
-              data: [speed.data],
-              boxtype: 'box-warning'
-            });
-            $scope.charts.push({
-              series: ['Heartrate'],
-              labels: heartrate.labels,
-              data: [heartrate.data],
-              boxtype: 'box-danger'
-            });
-
-            // console.log(nvdSpeed);
-
-            $scope.nvdchart = {
-              data: [{
-                'type': 'line',
-                'yAxis': 1,
-                'color': 'red',
-                'key': 'Speed',
-                'values': nvdSpeed
-              }, {
-                'type': 'area',
-                'yAxis': 2,
-                'key': 'Elevation',
-                'values': nvdElevation
-              }],
-              options: {
-                chart: {
-                  type: 'multiChart',
-                  useInteractiveGuideline: true,
-                  transitionDuration: 250,
-                  // interpolate: 'cardinal',
-                  // showLegend: false,
-                  height: 300,
-                  xAxis: {
-                    axisLabel: 'Time (min)',
-                  },
-                  y1Axis: {
-                    axisLabel: 'Heartrate (bpm)'
-                  },
-                  y2Axis: {
-                    axisLabel: 'Speed (bpm)'
-                  }
-                }
-              }
-            };*/
-    }
-
-    function normalizeData(dataType, parse) {
-      parse = parse || false;
-      var datasets = [];
-      angular.forEach($scope.workout[dataType], function(data) {
-        if (parse) {
-          datasets.push([data.offset, parseFloat(data.data[0])]);
-        } else {
-          datasets.push([data.offset, data.data[0]]);
-        }
-      });
-      return datasets;
-    }
-
-    function prepareDataNvd(datasets, factorY, factorX) {
-      factorY = factorY || 1;
-      factorX = factorX || 1;
-      var data = [];
-      angular.forEach(datasets, function(dataset) {
-        data.push({
-          x: dataset[0] * factorX,
-          y: dataset[1] * factorY
-        });
-      });
-
-      return data;
-    }
-
-    function prepareData(datasets, factor) {
-      factor = factor || 1;
-      var labels = [];
-      var data = [];
-      angular.forEach(datasets, function(dataset) {
-        labels.push(dataset[0]);
-        data.push(parseFloat(dataset[1] * factor));
-      });
-
-      return {
-        labels: labels,
-        data: data
-      };
     }
   }]);

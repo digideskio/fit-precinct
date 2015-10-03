@@ -76,22 +76,20 @@ body {
     &.area {
       fill: steelblue;
     }
+    &.circle {
+      stroke-width: 2px;
+      stroke: blue;
+      fill: steelblue;
+    }
   }
   .left {
     &.area {
       fill: indianred;
     }
-  }
-  circle {
-    &.left {
+    &.circle {
       stroke-width: 2px;
       stroke: red;
-      fill: indianred;
-    }
-    &.right {
-      stroke-width: 2px;
-      stroke: blue;
-      fill: steelblue;
+      fill: indianred;      
     }
   }
   path {
