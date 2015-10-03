@@ -23,6 +23,16 @@ angular.module('nodeApp')
       }
     };
 
+    $scope.rightOptions = {
+      // multiplier: 3.6,
+      // description: 'Speed (km/h)'
+      description: 'Heartrate (bpm)',
+      interpolate: 60
+    };
+    $scope.leftOptions = {
+      description: 'Elevation (m)'
+    }
+
     for (var i = 0; i < 14; i += 0.5) {
       $scope.dataset[0].data.push([i, Math.sin(i)]);
     }
@@ -94,6 +104,7 @@ angular.module('nodeApp')
     workoutService.load($stateParams.id).then(function(result) {
       $scope.workoutHead = result.head;
       $scope.workout = result.data;
+      fill();
 
       loadMapData($scope.map);
       createCharts();
@@ -102,106 +113,214 @@ angular.module('nodeApp')
 
     });
 
-    function createCharts() {
-      var datasets = normalizeData('heartrate');
-      var nvdHeartrate = normalizeData('heartrate', true);
-      nvdHeartrate = mathToolbox.largestTriangleThreeBuckets(nvdHeartrate, 50);
-      nvdHeartrate = prepareDataNvd(nvdHeartrate, 1, 1/60);
-      var tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
-      var heartrate = prepareData(tmpData);
+    function fill() {
+      if (!$scope.workout.speed && $scope.workout.distance) {
+        var output = [];
 
-      datasets = normalizeData('cadence');
-      tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
-      var cadence = prepareData(tmpData);
+        var prevX = 0;
+        var prevY = 0;
+        angular.forEach($scope.workout.distance, function(data) {
+          var diffX = data.offset - prevX;
+          var diffY = data.data[0] - prevY;
 
-      datasets = normalizeData('elevation');
-      tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
-      var elevation = prepareData(tmpData);
-
-      datasets = normalizeData('distance');
-      tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
-      var distance = prepareData(tmpData, 1 / 1000);
-      var derivedDatasets = mathToolbox.derive(tmpData);
-      var speed = prepareData(derivedDatasets, 3.6);
-
-      // var foo = plot('heartrate', 50);
-      // $scope.labels = foo.labels;
-      $scope.charts = [];
-      $scope.charts.push({
-        series: ['Distance'],
-        labels: distance.labels,
-        data: [distance.data],
-        boxtype: 'box-info',
-        options: {
-          bezierCurve: true,
-          scaleShowVerticalLines: false,
-          pointHitDetectionRadius: 1
-        }
-      });
-      if (cadence && cadence.data && cadence.data.length > 0) {
-        $scope.charts.push({
-          series: ['Cadence'],
-          labels: cadence.labels,
-          data: [cadence.data],
-          boxtype: 'box-success'
-        });
-      }
-      $scope.charts.push({
-        series: ['Elevation'],
-        labels: elevation.labels,
-        data: [elevation.data]
-      });
-      $scope.charts.push({
-        series: ['Speed'],
-        labels: speed.labels,
-        data: [speed.data],
-        boxtype: 'box-warning'
-      });
-      $scope.charts.push({
-        series: ['Heartrate'],
-        labels: heartrate.labels,
-        data: [heartrate.data],
-        boxtype: 'box-danger'
-      });
-
-      console.log(nvdHeartrate);
-
-      $scope.nvdchart = {
-        data: [{
-          'values': nvdHeartrate
-        }],
-        options: {
-          chart: {
-            interpolate: 'cardinal',
-            showLegend: false,
-            type: 'lineChart',
-            height: 300,
-            isArea: true,
-            xAxis: {
-              axisLabel: 'Time (min)'
-            },
-            yAxis: {
-              axisLabel: 'Heartrate (bpm)'
-            }
+          var value = diffY / diffX;
+          // console.log(diffX, diffY, value);
+          if (!isNaN(value)) {
+            output.push({
+              offset: data.offset,
+              data: [value]
+            });
+          } else {
+            output.push({
+              offset: data.offset,
+              data: [0]
+            });
           }
-        }
-      };
+
+          prevX = data.offset;
+          prevY = data.data[0];
+        });
+
+        $scope.workout.speed = output;
+      }
     }
 
-    function normalizeData(dataType, parse, annotate) {
-      annotate = annotate || false;
+    function createCharts() {
+      $scope.charts = [];
+      $scope.charts.push({
+        title: 'Speed / Elevation',
+        boxtype: 'box-info',
+        leftData: $scope.workout.speed,
+        leftOptions: {
+          multiplier: 3.6,
+          description: 'Speed (km/s)',
+          interpolate: 20
+        },
+        rightData: $scope.workout.elevation,
+        rightOptions: {
+          description: 'Elevation (m)',
+          interpolate: 60
+        }
+      });
+
+      $scope.charts.push({
+        title: 'Speed / Heartrate',
+        boxtype: 'box-info',
+        leftData: $scope.workout.speed,
+        leftOptions: {
+          multiplier: 3.6,
+          description: 'Speed (km/s)',
+          interpolate: 20
+        },
+        rightData: $scope.workout.heartrate,
+        rightOptions: {
+          description: 'Heartrate (bpm)',
+          interpolate: 20
+        }
+      });
+
+      $scope.charts.push({
+        title: 'Elevation / Heartrate',
+        boxtype: 'box-info',
+        leftData: $scope.workout.elevation,
+        leftOptions: {
+          description: 'Elevation (m)',
+          interpolate: 60
+        },
+        rightData: $scope.workout.heartrate,
+        rightOptions: {
+          description: 'Heartrate (bpm)',
+          interpolate: 20
+        }
+      });
+
+      $scope.charts.push({
+        title: 'Cadence / Heartrate',
+        boxtype: 'box-info',
+        leftData: $scope.workout.cadence,
+        leftOptions: {
+          description: 'Cadence (1)',
+          interpolate: 60
+        },
+        rightData: $scope.workout.heartrate,
+        rightOptions: {
+          description: 'Heartrate (bpm)',
+          interpolate: 20
+        }
+      });
+
+      /*      var datasets = normalizeData('heartrate');
+            var nvdHeartrate = normalizeData('heartrate', true);
+            nvdHeartrate = mathToolbox.largestTriangleThreeBuckets(nvdHeartrate, 100);
+            nvdHeartrate = prepareDataNvd(nvdHeartrate, 1, 1);
+            var tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
+            var heartrate = prepareData(tmpData);
+
+            datasets = normalizeData('cadence');
+            tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
+            var cadence = prepareData(tmpData);
+
+            datasets = normalizeData('elevation');
+            tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
+            var elevation = prepareData(tmpData);
+            var nvdElevation = normalizeData('elevation', true);
+            nvdElevation = mathToolbox.largestTriangleThreeBuckets(datasets, 100);
+            nvdElevation = prepareDataNvd(nvdElevation);
+
+            datasets = normalizeData('distance');
+            tmpData = mathToolbox.largestTriangleThreeBuckets(datasets, 50);
+            var distance = prepareData(tmpData, 1 / 1000);
+            var derivedDatasets = mathToolbox.derive(tmpData);
+            var speed = prepareData(derivedDatasets, 3.6);
+            var nvdDistance = normalizeData('distance', true);
+            nvdDistance = mathToolbox.largestTriangleThreeBuckets(nvdDistance, 100);
+            var nvdSpeed = mathToolbox.derive(nvdDistance);
+            nvdSpeed = prepareDataNvd(nvdSpeed, 3.6, 1);
+
+
+            // var foo = plot('heartrate', 50);
+            // $scope.labels = foo.labels;
+            $scope.charts = [];
+            $scope.charts.push({
+              series: ['Distance'],
+              labels: distance.labels,
+              data: [distance.data],
+              boxtype: 'box-info',
+              options: {
+                bezierCurve: true,
+                scaleShowVerticalLines: false,
+                pointHitDetectionRadius: 1
+              }
+            });
+            if (cadence && cadence.data && cadence.data.length > 0) {
+              $scope.charts.push({
+                series: ['Cadence'],
+                labels: cadence.labels,
+                data: [cadence.data],
+                boxtype: 'box-success'
+              });
+            }
+            $scope.charts.push({
+              series: ['Elevation'],
+              labels: elevation.labels,
+              data: [elevation.data]
+            });
+            $scope.charts.push({
+              series: ['Speed'],
+              labels: speed.labels,
+              data: [speed.data],
+              boxtype: 'box-warning'
+            });
+            $scope.charts.push({
+              series: ['Heartrate'],
+              labels: heartrate.labels,
+              data: [heartrate.data],
+              boxtype: 'box-danger'
+            });
+
+            // console.log(nvdSpeed);
+
+            $scope.nvdchart = {
+              data: [{
+                'type': 'line',
+                'yAxis': 1,
+                'color': 'red',
+                'key': 'Speed',
+                'values': nvdSpeed
+              }, {
+                'type': 'area',
+                'yAxis': 2,
+                'key': 'Elevation',
+                'values': nvdElevation
+              }],
+              options: {
+                chart: {
+                  type: 'multiChart',
+                  useInteractiveGuideline: true,
+                  transitionDuration: 250,
+                  // interpolate: 'cardinal',
+                  // showLegend: false,
+                  height: 300,
+                  xAxis: {
+                    axisLabel: 'Time (min)',
+                  },
+                  y1Axis: {
+                    axisLabel: 'Heartrate (bpm)'
+                  },
+                  y2Axis: {
+                    axisLabel: 'Speed (bpm)'
+                  }
+                }
+              }
+            };*/
+    }
+
+    function normalizeData(dataType, parse) {
       parse = parse || false;
       var datasets = [];
       angular.forEach($scope.workout[dataType], function(data) {
         if (parse) {
-          if (annotate) {
-            datasets.push({
-              x: data.offset,
-              y: parseFloat(data.data[0])
-            });
-          } else {
-            datasets.push([data.offset, parseFloat(data.data[0])]);
-          }
+          datasets.push([data.offset, parseFloat(data.data[0])]);
         } else {
           datasets.push([data.offset, data.data[0]]);
         }
@@ -216,7 +335,7 @@ angular.module('nodeApp')
       angular.forEach(datasets, function(dataset) {
         data.push({
           x: dataset[0] * factorX,
-          y: parseFloat(dataset[1] * factorY)
+          y: dataset[1] * factorY
         });
       });
 

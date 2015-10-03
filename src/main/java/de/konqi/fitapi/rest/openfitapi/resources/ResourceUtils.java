@@ -152,6 +152,7 @@ public class ResourceUtils {
         workoutDataToAdd.addAll(getWorkoutData(workoutKey, workout.getCadence(), "cadence"));
         workoutDataToAdd.addAll(getWorkoutData(workoutKey, workout.getElevation(), "elevation"));
         workoutDataToAdd.addAll(getWorkoutData(workoutKey, workout.getPower(), "power"));
+        workoutDataToAdd.addAll(getWorkoutData(workoutKey, workout.getSpeed(), "speed"));
 
         OfyService.ofy().save().entities(workoutDataToAdd).now();
 

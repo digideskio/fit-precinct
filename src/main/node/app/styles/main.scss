@@ -10,6 +10,7 @@
 @import "timeline";
 @import "info-box";
 @import "login";
+@import "buttons";
 @import "bootstrap-social";
 body {
   text-rendering: optimizeLegibility;
@@ -36,7 +37,8 @@ body {
     display: block;
     // height: 28px;
     float: none;
-    &:focus,  &:not(.empty){
+    &:focus,
+    &:not(.empty) {
       & ~ .floating-label {
         font-size: 10px;
         top: -10px;
@@ -52,5 +54,88 @@ body {
     font-size: 16px;
     height: 100%;
     transition: .2s ease all;
+  }
+}
+
+.d3plot {
+  /*   div {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 30%;
+    overflow: hidden;
+    vertical-align: middle;
+    > svg {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  } */
+  .right {
+    &.area {
+      fill: steelblue;
+    }
+  }
+  .left {
+    &.area {
+      fill: indianred;
+    }
+  }
+  circle {
+    &.left {
+      stroke-width: 2px;
+      stroke: red;
+      fill: indianred;
+    }
+    &.right {
+      stroke-width: 2px;
+      stroke: blue;
+      fill: steelblue;
+    }
+  }
+  path {
+    opacity: 0.5;
+    &.left {
+      stroke: #c00;
+    }
+    &.right {
+      stroke: #00C;
+    }
+    stroke-width: 1px;
+    fill: transparent;
+  }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+  /*
+  .y.axis {
+    path {
+      display: none;
+    }
+    line {
+      stroke: #777;
+      stroke-dasharray: 2, 2;
+    }
+    .right {
+      text-anchor: end;
+    }
+    .left {
+      text-anchor: start;
+    }
+  }*/
+}
+
+.workout-menu {
+  li {
+    a {
+      text-align: left;
+    }
+    .btn .fa {
+      width: 15px;
+    }
   }
 }

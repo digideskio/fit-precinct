@@ -1,6 +1,21 @@
-<h2><i ng-class="icon(workoutHead.type)"></i> Workout details<a href="" data-toggle="modal" data-target="#editHeadModal">
-  <span class="fa fa-edit"></span>
-</a><small ng-if="workoutHead.name"> ({{workoutHead.name}})</small></h2>
+<h2 class="pull-left"><i ng-class="icon(workoutHead.type)"></i> Workout details
+<small ng-if="workoutHead.name"> ({{workoutHead.name}})</small></h2>
+<div class="btn-group pull-right workout-menu">
+  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editHeadModal"><span class="fa fa-edit"></span> Edit</button>
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="#" class="btn btn-flat" data-toggle="modal" data-target="#editHeadModal">
+        <span class="fa fa-edit"></span> Edit
+      </a>
+    </li>
+    <li><a href="#" class="btn btn-flat"><span class="fa fa-trash"></span> Delete</a></li>
+  </ul>
+</div>
+<div class="clearfix"></div>
 <div class="modal fade" id="editHeadModal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -87,7 +102,7 @@
   <div class="col-md-12">
     <div class="box box-success">
       <div class="box-header with-border" style="max-height: 500px;">
-        <div id="map" style="max-height: 450px;"></div>
+        <!-- <div id="map" style="max-height: 450px;"></div> -->
         <!-- /.box-tools -->
       </div>
       <!-- /.box-header -->
@@ -102,29 +117,18 @@
   <div class="col-md-6" ng-repeat="chart in charts">
     <div class="box" ng-class="chart.boxtype">
       <div class="box-header with-border">
-        <h3 class="box-title">{{chart.series[0]}}</h3>
-        <canvas id="line" class="chart chart-line" chart-data="chart.data" chart-labels="chart.labels" chart-options="chart.options" chart-series="series" chart-click="onClick">
-        </canvas>
+        <h3 class="box-title">{{chart.title}}</h3>
         <!-- /.box-tools -->
+      </div>
+      <div class="box-body">
+        <div class="d3plot">
+          <div d3chart height="290" left-data="chart.leftData" left-options="chart.leftOptions" right-data="chart.rightData" right-options="chart.rightOptions"></div>
+          <!-- /.box-body -->
+        </div>
       </div>
       <!-- /.box-header -->
       <div ng-if="loading" class="overlay">
         <i class="fa fa-refresh fa-spin"></i>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="box box-info">
-      <div class="box-header with-border">
-        <h3 class="box-title">Random stat</h3>
-        <!-- /.box-tools -->
-      </div>
-      <!-- /.box-header -->
-      <div class="box-body">
-        <div>
-        <div nvd3 options="nvdchart.options" data="nvdchart.data"></div>
-          <!-- /.box-body -->
-        </div>
       </div>
     </div>
   </div>

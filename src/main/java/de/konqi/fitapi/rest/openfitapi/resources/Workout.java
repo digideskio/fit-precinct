@@ -34,6 +34,7 @@ public class Workout {
     String distance[];//	array (OpenFit Track Data)	List of meters moved associated with this workout
     String heartrate[];//	array (OpenFit Track Data)	List of heartrate data associated with this workout
     String cadence[];//	array (OpenFit Track Data)	List of cadence data associated with this workout
+    String speed[];//	array (OpenFit Track Data)	List of speed data associated with this workout
     String power[];//	array (OpenFit Track Data)	List of power data associated with this workout
     String timer_stops[];//	array	An array of Timer Stops
     String uri;//	string [read only]	URI of the detail information for this workout
@@ -269,5 +270,13 @@ public class Workout {
 
     public void setActivity(String activity) {
         this.activity = activity;
+    }
+
+    public String[] getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(String[] speed) {
+        this.speed = speed;
     }
 }
