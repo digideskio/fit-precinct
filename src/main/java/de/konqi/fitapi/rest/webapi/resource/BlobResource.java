@@ -13,11 +13,20 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 /**
- * Created by konqi on 18.09.2015.
+ * Resource class for blob related functionality
+ *
+ * @author konqi
  */
 @Path("/img")
 @PermitAll
 public class BlobResource {
+    /**
+     * Endpoint to serve a blob from Google's blob storage
+     * @param blobKey
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @GET
     @Path("/{id}")
     public Response getBlob(@PathParam("id") String blobKey, @Context HttpServletResponse response) throws IOException {

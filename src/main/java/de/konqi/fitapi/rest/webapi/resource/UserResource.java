@@ -37,7 +37,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by konqi on 19.08.2015.
+ * API resource for user and user profile related information
+ *
+ * @author konqi
  */
 @Path("/user")
 @PermitAll
@@ -46,6 +48,13 @@ import java.util.Map;
 public class UserResource {
     private static final Logger logger = LoggerFactory.getLogger(UserResource.class);
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @param sc
+     * @return
+     */
     @GET
     @Path("/me")
     @RolesAllowed("user")
@@ -64,6 +73,13 @@ public class UserResource {
         return Response.ok().entity(user).build();
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @param sc
+     * @return
+     */
     @GET
     @Path("/getUpdateUrl")
     @RolesAllowed("user")
@@ -79,6 +95,14 @@ public class UserResource {
         return Response.ok().entity(uploadUrl).build();
     }
 
+    /**
+     *
+     * @param multiPart
+     * @param request
+     * @param response
+     * @param sc
+     * @return
+     */
     @POST
     @Path("/postUpdateUrl")
     @RolesAllowed("user")
@@ -112,6 +136,14 @@ public class UserResource {
         return Response.status(HttpStatus.SC_BAD_REQUEST).build();
     }
 
+    /**
+     *
+     * @param updateUser
+     * @param request
+     * @param response
+     * @param sc
+     * @return
+     */
     @POST
     @Path("/me")
     @RolesAllowed("user")
@@ -134,7 +166,12 @@ public class UserResource {
         return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
     }
 
-
+    /**
+     *
+     * @param params
+     * @param sc
+     * @return
+     */
     @PUT
     @RolesAllowed("user")
     @Path("/uploadUser")
@@ -150,6 +187,12 @@ public class UserResource {
         return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
     }
 
+    /**
+     *
+     * @param type
+     * @param request
+     * @return
+     */
     @GET
     @Path("/login/{type}")
     public Response login(@PathParam("type") String type, @Context HttpServletRequest request) {
@@ -178,6 +221,17 @@ public class UserResource {
         return Response.status(HttpStatus.SC_UNAUTHORIZED).build();
     }
 
+    /**
+     *
+     * @param type
+     * @param state
+     * @param code
+     * @param authuser
+     * @param prompt
+     * @param sessionState
+     * @param request
+     * @return
+     */
     @GET
     @Path("/login/{type}/oauth2callback")
     @Produces(MediaType.TEXT_HTML)
