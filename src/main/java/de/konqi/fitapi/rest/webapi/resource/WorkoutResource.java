@@ -1,6 +1,7 @@
 package de.konqi.fitapi.rest.webapi.resource;
 
 import de.konqi.fitapi.db.domain.Workout;
+import de.konqi.fitapi.db.domain.WorkoutData;
 import de.konqi.fitapi.db.repository.WorkoutRepository;
 import de.konqi.fitapi.rest.webapi.WebApiUser;
 import org.apache.http.HttpStatus;
@@ -26,6 +27,7 @@ import java.util.List;
 public class WorkoutResource {
     /**
      * Gets a list of workouts
+     *
      * @param sc security context injected via jersey
      * @return list of workouts
      */
@@ -40,8 +42,9 @@ public class WorkoutResource {
 
     /**
      * Gets a list with the #number latest workouts
+     *
      * @param number number of elements to return
-     * @param sc security context injected via jersey
+     * @param sc     security context injected via jersey
      * @return list of workouts
      */
     @GET
@@ -55,8 +58,9 @@ public class WorkoutResource {
 
     /**
      * Gets a list of workouts newer than a certain time
-     * @param since timestamp workouts should be newer than
-     * @param sc security context injected via jersey
+     *
+     * @param since workouts must be newer than this timestamp
+     * @param sc    security context injected via jersey
      * @return list of workouts
      */
     @GET
@@ -67,9 +71,10 @@ public class WorkoutResource {
 
     /**
      * Gets a list of workouts in a timespan between since and until
-     * @param since timestamp to include workouts from
-     * @param until timestamp to include workouts to
-     * @param sc security context injected via jersey
+     *
+     * @param since workouts must be newer than this timestamp
+     * @param until workouts must be older than this timestamp
+     * @param sc    security context injected via jersey
      * @return list of workouts
      */
     @GET
@@ -85,8 +90,9 @@ public class WorkoutResource {
 
     /**
      * Gets a specific workout by its id
+     *
      * @param workoutId id of the workout
-     * @param sc security context injected via jersey
+     * @param sc        security context injected via jersey
      * @return workout data
      */
     @GET
@@ -100,9 +106,10 @@ public class WorkoutResource {
 
     /**
      * Updates a specific workout identified by its id
+     *
      * @param workoutId id of the workout to update
-     * @param workout data to update the workout with
-     * @param sc security context injected via jersey
+     * @param workout   data to update the workout with
+     * @param sc        security context injected via jersey
      * @return updated workout data
      */
     @POST
@@ -126,8 +133,9 @@ public class WorkoutResource {
 
     /**
      * Deletes a specific workout identified by its id
+     *
      * @param workoutId id of the workout to delete
-     * @param sc security context injected via jersey
+     * @param sc        security context injected via jersey
      * @return status code < 300 if successful
      */
     @DELETE
@@ -142,15 +150,40 @@ public class WorkoutResource {
     }
 
     /**
-     * Inserts a new workout
+     * Creates a new workout head without any data attached
+     *
      * @param workout workout data to insert
-     * @param sc security context injected via jersey
+     * @param sc      security context injected via jersey
      * @return workout as inserted into the database
      */
     @POST
-    @Path("/insert")
-    public Response insertWorkout(Workout workout, @Context SecurityContext sc) {
-        return Response.notModified().build();
+    @Path("/createHead")
+    public Response createWorkoutHead(Workout workout, @Context SecurityContext sc) {
+        WebApiUser webApiUser = (WebApiUser) sc.getUserPrincipal();
+        workout = WorkoutRepository.insertHead(webApiUser, workout);
+        if (workout.getId() != null) {
+            return Response.accepted().entity(workout).build();
+        }
+
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    /**
+     * Appends sensor data (or any other kind of data) to a workout identified by its id
+     * @param workoutId
+     * @param data
+     * @param sc
+     * @return
+     */
+    @POST
+    @Path("/append/{workoutId}")
+    public Response appendData(@PathParam("workoutId") Long workoutId, WorkoutData data, @Context SecurityContext sc) {
+        WebApiUser webApiUser = (WebApiUser) sc.getUserPrincipal();
+        if(WorkoutRepository.appendData(webApiUser, workoutId, data)){
+            return Response.accepted().build();
+        }
+
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
 }
