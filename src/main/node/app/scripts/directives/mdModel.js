@@ -7,7 +7,7 @@
  * # ngModel
  */
 angular.module('nodeApp')
-  .directive('ngModelExt', [function() {
+  .directive('mdModel', [function() {
     return {
       require: 'ngModel',
       scope: {

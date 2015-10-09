@@ -1,14 +1,13 @@
 @import "../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/clearfix";
 @import "../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/border-radius";
 @import "../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/vendor-prefixes";
-
 @mixin css3-prefix($property, $value) {
   -webkit-#{$property}: #{$value};
-   -khtml-#{$property}: #{$value};
-     -moz-#{$property}: #{$value};
-      -ms-#{$property}: #{$value};
-       -o-#{$property}: #{$value};
-          #{$property}: #{$value};
+  -khtml-#{$property}: #{$value};
+  -moz-#{$property}: #{$value};
+  -ms-#{$property}: #{$value};
+  -o-#{$property}: #{$value};
+  #{$property}: #{$value};
 }
 
 @mixin margin-animation($duration) {
@@ -45,7 +44,22 @@
   }
 }
 
-@mixin bg-color($bgcolor, $fgcolor){
+@mixin bg-color($bgcolor, $fgcolor) {
   background-color: $bgcolor !important;
   color: $fgcolor !important;
+}
+
+@mixin bootstrapVariations($attribute) {
+  @include variations($attribute, $bootstrapColorMap);
+}
+
+@mixin variations($attribute, $map) {
+  $selector: &;
+  @each $key,
+  $color in $map {
+    $tmp: $selector + -$key;
+    &#{$tmp} {
+      #{$attribute}: $color;
+    }
+  }
 }

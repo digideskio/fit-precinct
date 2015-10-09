@@ -15,6 +15,12 @@ angular.module('nodeApp')
       'cycling': 'fa icon-bicycle bg-yellow'
     };
 
+    $scope.checkedWorkouts = [];
+
+    $scope.toggleWorkout = function(workout){
+      console.log(workout);
+    }
+
     $scope.workouts = null;
     workoutService.list().then(function(result) {
 

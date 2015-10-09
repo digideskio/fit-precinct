@@ -1,11 +1,11 @@
 <h2>Workouts <small>timeline</small></h2>
-<ul class="timeline">
+<ul class="timeline workouts">
   <li ng-repeat="item in ::timeline" ng-class="{'time-label':item.type=='date'}">
     <span ng-if="item.type=='date'" class="bg-red">{{item.value}}</span>
     <!-- timeline icon -->
     <i ng-if="item.type=='workout'" ng-class="icon[item.symbol]"></i>
     <div ng-if="item.type=='workout'" class="timeline-item" ng-init="::workout = item.value">
-      <span class="time"><i class="fa fa-clock-o"></i> {{::workout.startTime | momentFilter:'HH:mm'}}</span>
+      <span class="time"><i class="fa fa-clock-o"></i> {{::workout.startTime | momentFilter:'HH:mm'}}<div checkbox class="checkbox-danger"><label><input type="checkbox" ng-model="item.value.checked" ng-change="toggleWorkout(item.value)"></label></div></span>
       <h3 class="timeline-header"><a ui-sref="workout({id:workout.id})">{{workout.name}}</a> <small ng-init="time = workout.data.clockDuration">{{time  | momentFilter:'seconds':'duration':'hours'}}:{{time | momentFilter:'seconds':'duration':'minutes'}} h, {{workout.data.totalDistance/1000 | number:2 }} km</small></h3>
       <div class="timeline-body">
         <div class="row">
@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-<!--       <div class="timeline-footer">
+      <!--       <div class="timeline-footer">
         <a class="btn btn-primary btn-xs">...</a>
       </div> -->
     </div>

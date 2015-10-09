@@ -6,11 +6,11 @@
         <div class="box-body box-profile">
           <div img-upload img-input-name="img" img-src="user.profileImg" img-data="imgData"><img class="profile-user-img img-responsive img-circle" ng-src="{{user.profileImg}}" alt="User profile picture"></div>
           <div class="form-control-wrapper profile-username text-center">
-            <input type="text" class="form-control text-center" ng-model="user.name" ng-model-ext name="name">
+            <input type="text" class="form-control text-center" ng-model="user.name" md-model name="name">
             <div class="floating-label">Name</div>
           </div>
           <div class="form-control-wrapper profile-username text-center">
-            <input type="text" class="form-control text-center" ng-model="user.email" ng-model-ext readonly>
+            <input type="text" class="form-control text-center" ng-model="user.email" md-model readonly>
             <div class="floating-label">Email</div>
           </div>
           <!-- <p class="text-muted text-center">Athlete</p> -->
@@ -39,11 +39,11 @@
           <div class="box-body">
             <form>
               <div class="form-control-wrapper">
-                <input id="inputUsernamePassword" class="form-control" type="text" name="username" ng-model="uploadSettings.username" ng-model-ext/>
+                <input id="inputUsernamePassword" class="form-control" type="text" name="username" ng-model="uploadSettings.username" md-model/>
                 <label for="inputUsernamePassword" class="floating-label">user name</label>
               </div>
               <div class="form-control-wrapper">
-                <input id="inputUploadPassword" class="form-control" type="text" name="password" ng-model="uploadSettings.password" ng-model-ext />
+                <input id="inputUploadPassword" class="form-control" type="text" name="password" ng-model="uploadSettings.password" md-model />
                 <label for="inputUploadPassword" class="floating-label">upload password</label>
               </div>
               <div class="row">
@@ -65,13 +65,13 @@
               <div class="row">
                 <div class="col-sm-6">
                   <div class="form-control-wrapper">
-                    <input type="text" class="form-control text-center" ng-model="user.profileData.age" ng-model-ext ng-change="updateHr()">
+                    <input type="text" class="form-control text-center" ng-model="user.profileData.age" md-model ng-change="updateHr()">
                     <div class="floating-label">Age (years)</div>
                   </div>
                 </div>
                 <div class="col-sm-6">
                   <div class="form-control-wrapper">
-                    <input type="text" class="form-control text-center" ng-model="user.profileData.weight" ng-model-ext>
+                    <input type="text" class="form-control text-center" ng-model="user.profileData.weight" md-model>
                     <div class="floating-label">Weight (kilos)</div>
                   </div>
                 </div>
@@ -91,37 +91,37 @@
               <div class="row">
                 <div class="col-sm-4">
                   <div class="form-control-wrapper">
-                    <input class="form-control" type="text" ng-model="user.profileData.hr100" ng-model-ext />
+                    <input class="form-control" type="text" ng-model="user.profileData.hr100" md-model />
                     <label for="" class="floating-label">100%</label>
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-control-wrapper">
-                    <input class="form-control" type="text" ng-model="user.profileData.hr90" ng-model-ext />
+                    <input class="form-control" type="text" ng-model="user.profileData.hr90" md-model />
                     <label for="" class="floating-label">90%</label>
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-control-wrapper">
-                    <input class="form-control" type="text" ng-model="user.profileData.hr80" ng-model-ext />
+                    <input class="form-control" type="text" ng-model="user.profileData.hr80" md-model />
                     <label for="" class="floating-label">80%</label>
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-control-wrapper">
-                    <input class="form-control" type="text" ng-model="user.profileData.hr70" ng-model-ext />
+                    <input class="form-control" type="text" ng-model="user.profileData.hr70" md-model />
                     <label for="" class="floating-label">70%</label>
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-control-wrapper">
-                    <input class="form-control" type="text" ng-model="user.profileData.hr60" ng-model-ext />
+                    <input class="form-control" type="text" ng-model="user.profileData.hr60" md-model />
                     <label for="" class="floating-label">60%</label>
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-control-wrapper">
-                    <input class="form-control" type="text" ng-model="user.profileData.hr50" ng-model-ext />
+                    <input class="form-control" type="text" ng-model="user.profileData.hr50" md-model />
                     <label for="" class="floating-label">50%</label>
                   </div>
                 </div>

@@ -11,6 +11,7 @@
 @import "info-box";
 @import "login";
 @import "buttons";
+@import "checkboxes";
 @import "bootstrap-social";
 body {
   text-rendering: optimizeLegibility;
@@ -89,7 +90,7 @@ body {
     &.circle {
       stroke-width: 2px;
       stroke: red;
-      fill: indianred;      
+      fill: indianred;
     }
   }
   path {
@@ -136,4 +137,9 @@ body {
       width: 15px;
     }
   }
+}
+
+.workouts .timeline-item .checkbox {
+  display: inline-block;
+  margin: 0 0 0 8px;
 }
