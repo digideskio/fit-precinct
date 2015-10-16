@@ -12,7 +12,9 @@
     var thisOrigin = window.location.protocol + '//' + window.location.hostname;
     var debugOrigin = thisOrigin + ':9000';
     // window.location.host is hostname + port
-    thisOrigin += ':' + window.location.port;
+    if(window.location.port){
+      thisOrigin += ':' + window.location.port;
+    }
     // Do we trust the sender of this message?
     if (event.origin !== thisOrigin && event.origin !== debugOrigin) {
       console.log('origin mismatch', event);
