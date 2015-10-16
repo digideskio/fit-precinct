@@ -7,7 +7,7 @@
  * Controller of the nodeApp
  */
 angular.module('nodeApp')
-  .controller('UserCtrl', ['$scope', 'userService', function($scope, userService) {
+  .controller('UserCtrl', ['$scope', '$state', 'userService', function($scope, $state, userService) {
     $scope.useLocalStorage = false;
     $scope.localStorageAvailable = userService.localStorageAvailable();
 
@@ -33,6 +33,11 @@ angular.module('nodeApp')
       userService.me().then(function(result) {
         $scope.user = result.data;
         $scope.useLocalStorage = userService.useLocalStorage();
+      }, function(error) {
+        console.log('error', error);
+        if (error.status == 401) {
+          $state.go('login');
+        }
       });
     }
 
@@ -43,8 +48,11 @@ angular.module('nodeApp')
       userService.setUploadUser($scope.uploadSettings.username, $scope.uploadSettings.password).then(function(result) {
         console.log(result);
         $scope.status = 'OK';
-      }, function(result) {
-        console.log('error', result);
+      }, function(error) {
+        console.log('error', error);
+        if (error.status == 401) {
+          $state.go('login');
+        }
       });
     };
 

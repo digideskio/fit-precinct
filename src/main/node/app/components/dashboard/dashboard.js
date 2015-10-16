@@ -8,7 +8,7 @@
  * Controller of the nodeApp
  */
 angular.module('nodeApp')
-  .controller('MainCtrl', ['$scope', '$window', '$q', 'userService', 'workoutService', 'momentService', 'mathToolbox', function($scope, $window, $q, userService, workoutService, moment, mathToolbox) {
+  .controller('DashboardCtrl', ['$scope', '$window', '$state', '$q', 'userService', 'workoutService', 'momentService', 'mathToolbox', function($scope, $window, $state, $q, userService, workoutService, moment, mathToolbox) {
     $scope.user = null;
 
     $scope.login = function(provider) {
@@ -29,6 +29,10 @@ angular.module('nodeApp')
           $scope.lastTrained = moment().to(moment(result.lastTrained));
           $scope.trainingTrend = 'transform: rotate(' + result.trainingTrend + 'deg)';
         });
+      }, function(error) {
+        if (error.status == 401) {
+          $state.go('login');
+        }
       });
     }
 

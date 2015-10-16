@@ -6,19 +6,18 @@ import de.konqi.fitapi.rest.webapi.resource.BlobResource;
 import de.konqi.fitapi.rest.webapi.resource.UserResource;
 import de.konqi.fitapi.rest.webapi.resource.WorkoutResource;
 import org.glassfish.jersey.filter.LoggingFilter;
-import org.glassfish.jersey.media.multipart.MultiPart;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.MultiPartProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
 
 import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.FeatureContext;
 import java.util.logging.Logger;
 
 /**
- * Created by konqi on 19.08.2015.
+ * Web application api
+ *
+ * @author konqi
  */
 @ApplicationPath("/web/api")
 public class WebApi extends ResourceConfig {

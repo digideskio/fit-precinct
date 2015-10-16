@@ -21,37 +21,37 @@ angular
     $stateProvider
       .state('dashboard', {
         url: '/dashboard',
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        templateUrl: 'components/dashboard/dashboard.html',
+        controller: 'DashboardCtrl'
       })
       .state('login', {
         url: '/',
-        templateUrl: 'views/login.html',
+        templateUrl: 'components/login/login.html',
         controller: 'LoginCtrl'
       })
       .state('about', {
         url: '/about',
-        templateUrl: 'views/about.html',
+        templateUrl: 'components/about/about.html',
         controller: 'AboutCtrl'
       })
       .state('help', {
         url: '/help',
-        templateUrl: 'views/help.html',
+        templateUrl: 'components/help/help.html',
         controller: 'HelpCtrl'
       })
       .state('user', {
         url: '/user',
-        templateUrl: 'views/user.html',
+        templateUrl: 'components/user/user.html',
         controller: 'UserCtrl'
       })
       .state('workouts', {
         url: '/workouts',
-        templateUrl: 'views/workouts.html',
+        templateUrl: 'components/workouts/workouts.html',
         controller: 'WorkoutsCtrl'
       })
       .state('workout', {
         url: '/workout/:id',
-        templateUrl: 'views/workout.html',
+        templateUrl: 'components/workout/workout.html',
         controller: 'WorkoutCtrl'
       });
     //.otherwise({

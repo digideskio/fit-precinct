@@ -31,11 +31,14 @@
         <button type="button" class="btn btn-danger" ng-click="delete($event, '#deleteModal')">I'm sure</button>
       </div>
     </div>
+    <div ng-if="loading" class="overlay">
+      <i class="fa fa-refresh fa-spin"></i>
+    </div>
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
 </div>
-<!-- -->
+<!-- Edit Workout Modal -->
 <div class="modal fade" id="editHeadModal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -72,6 +75,9 @@
       </div>
     </div>
     <!-- /.modal-content -->
+    <div ng-if="loading" class="overlay">
+      <i class="fa fa-refresh fa-spin"></i>
+    </div>
   </div>
   <!-- /.modal-dialog -->
 </div>

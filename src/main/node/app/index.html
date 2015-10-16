@@ -41,7 +41,7 @@
     <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a ui-sref="dashboard"><span style="font-size:16px;" class="hidden-xs showopacity fa fa-dashboard"></span>Dashboard</a></li>
-        <li><a ui-sref="workouts"><span style="font-size:16px;" class="hidden-xs showopacity fa fa-calendar-o"></span>Workouts</a></li>
+        <li><a ui-sref="workouts" ui-sref-opts="{reload:true}"><span style="font-size:16px;" class="hidden-xs showopacity fa fa-calendar-o"></span>Workouts</a></li>
         <li><a ui-sref="user"><span style="font-size:16px;" class="hidden-xs showopacity glyphicon glyphicon-user"></span>User</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span style="font-size:16px;" class="hidden-xs showopacity glyphicon glyphicon-cog"></span>Settings <span class="caret"></span></a>
@@ -125,20 +125,20 @@
   <!-- endbuild -->
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <script src="scripts/app.js"></script>
-  <script src="scripts/controllers/main.js"></script>
-  <script src="scripts/controllers/about.js"></script>
+  <script src="components/dashboard/dashboard.js"></script>
+  <script src="components/about/about.js"></script>
   <script src="scripts/services/userservice.js"></script>
-  <script src="scripts/controllers/user.js"></script>
+  <script src="components/user/user.js"></script>
   <script src="scripts/services/workoutservice.js"></script>
-  <script src="scripts/controllers/workouts.js"></script>
-  <script src="scripts/controllers/workout.js"></script>
+  <script src="components/workouts/workouts.js"></script>
+  <script src="components/workout/workout.js"></script>
   <script src="scripts/services/momentservice.js"></script>
   <script src="scripts/filters/momentfilter.js"></script>
   <script src="scripts/services/mathtoolbox.js"></script>
   <script src="scripts/services/openlayersservice.js"></script>
   <script src="scripts/services/storageservice.js"></script>
-  <script src="scripts/controllers/help.js"></script>
-  <script src="scripts/controllers/login.js"></script>
+  <script src="components/help/help.js"></script>
+  <script src="components/login/login.js"></script>
   <script src="scripts/directives/imgUpload.js"></script>
   <script src="scripts/directives/mdModel.js"></script>
   <script src="scripts/services/d3service.js"></script>

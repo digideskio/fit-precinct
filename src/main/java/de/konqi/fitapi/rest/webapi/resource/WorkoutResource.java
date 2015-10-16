@@ -105,6 +105,22 @@ public class WorkoutResource {
     }
 
     /**
+     * Gets a specific workout head by its id
+     *
+     * @param workoutId id of the workout
+     * @param sc        security context injected via jersey
+     * @return workout data
+     */
+    @GET
+    @Path("/get/{workoutId}/head")
+    public Response getWorkoutHead(@PathParam("workoutId") Long workoutId, @Context SecurityContext sc) {
+        WebApiUser webApiUser = (WebApiUser) sc.getUserPrincipal();
+        Workout workoutHead = WorkoutRepository.getWorkoutHeadForUser(webApiUser, workoutId);
+
+        return Response.ok().entity(workoutHead).build();
+    }
+
+    /**
      * Updates a specific workout identified by its id
      *
      * @param workoutId id of the workout to update
@@ -170,16 +186,17 @@ public class WorkoutResource {
 
     /**
      * Appends sensor data (or any other kind of data) to a workout identified by its id
-     * @param workoutId
-     * @param data
-     * @param sc
-     * @return
+     *
+     * @param workoutId workout to append data to
+     * @param data      data to append to workout
+     * @param sc        security context injected via jersey
+     * @return Response with Status.ACCEPTED if data was successfully appended
      */
     @POST
     @Path("/append/{workoutId}")
     public Response appendData(@PathParam("workoutId") Long workoutId, WorkoutData data, @Context SecurityContext sc) {
         WebApiUser webApiUser = (WebApiUser) sc.getUserPrincipal();
-        if(WorkoutRepository.appendData(webApiUser, workoutId, data)){
+        if (WorkoutRepository.appendData(webApiUser, workoutId, data)) {
             return Response.accepted().build();
         }
 

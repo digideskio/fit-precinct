@@ -1,0 +1,133 @@
+<h2 class="pull-left">Workouts <small>timeline</small></h2>
+<!-- Menu -->
+<div class="btn-group pull-right workouts-menu" ng-show="checkedWorkouts.length > 0">
+  <!-- <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editHeadModal"><span class="fa fa-edit"></span> Edit</button> -->
+  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="#" class="btn btn-flat" data-toggle="modal" data-target="#mergeModal">
+        <span class="fa fa-code-fork"></span> Merge
+      </a>
+    </li>
+    <li>
+      <a href="#" ng-click="concat.prepare()" class="btn btn-flat" data-toggle="modal" data-target="#concatModal">
+        <span class="fa fa-link"></span> Concatenate
+      </a>
+    </li>
+    <li><a href="#" ng-click="delete.prepare()" class="btn btn-flat" data-toggle="modal" data-target="#deleteModal"><span class="fa fa-trash"></span> Delete</a></li>
+  </ul>
+</div>
+<div class="clearfix"></div>
+<!-- delete modal -->
+<div class="modal fade overlay-wrapper" id="deleteModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">Delete Workout</h4>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete {{delete.count}} workout(s)?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="delete.action($event, '#deleteModal')">I'm sure</button>
+      </div>
+    </div>
+    <div ng-if="loading" class="overlay">
+      <i class="fa fa-refresh fa-spin"></i>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.delete modal -->
+<!-- concat modal -->
+<div class="modal fade overlay-wrapper" id="concatModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">Concatenate Workout</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="">Name</label>
+            <input class="form-control" type="text" ng-model="concat.workoutHead.name">
+          </div>
+          <div class="form-group">
+            <label for="">Start time</label>
+            <input class="form-control" type="text" ng-model="concat.workoutHead.startTime">
+          </div>
+          <div class="form-group">
+            <label for="">Type</label>
+            <select class="form-control" ng-model="concat.workoutHead.type">
+              <option>Cycling</option>
+              <option>Walking</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="">Notes</label>
+            <textarea class="form-control" rows="3" ng-model="concat.workoutHead.notes"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="concat.action($event, '#concatModal')">Concat</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+    <div ng-if="loading" class="overlay">
+      <i class="fa fa-refresh fa-spin"></i>
+    </div>
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.concat modal -->
+<!-- timeline -->
+<ul class="timeline workouts">
+  <li ng-repeat="item in ::timeline" ng-class="{'time-label':item.type=='date'}">
+    <span ng-if="item.type=='date'" class="bg-red">{{item.value}}</span>
+    <!-- timeline icon -->
+    <i ng-if="item.type=='workout'" ng-class="icon[item.symbol]"></i>
+    <div ng-if="item.type=='workout'" class="timeline-item" ng-init="::workout = item.value">
+      <span class="time"><i class="fa fa-clock-o"></i> {{::workout.startTime | momentFilter:'HH:mm'}}<div checkbox class="checkbox-warning"><label><input type="checkbox" ng-model="item.value.checked" ng-change="concat.toggleWorkout(item.value)"></label></div></span>
+      <h3 class="timeline-header"><a ui-sref="workout({id:workout.id})">{{workout.name}}</a> <small ng-init="time = workout.data.clockDuration">{{time  | momentFilter:'seconds':'duration':'hours'}}:{{time | momentFilter:'seconds':'duration':'minutes'}} h, {{workout.data.totalDistance/1000 | number:2 }} km</small></h3>
+      <div class="timeline-body">
+        <div class="row">
+          <div class="col-md-4"><span class="fa fa-clock-o" title="Duration"></span> Total / Active
+            <br/> {{workout.data.clockDuration | momentFilter:'seconds':'duration':'hours'}}:{{workout.data.clockDuration | momentFilter:'seconds':'duration':'minutes'}} h / {{workout.data.duration | momentFilter:'seconds':'duration':'hours'}}:{{workout.data.duration | momentFilter:'seconds':'duration':'minutes'}} h</div>
+          <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-road" title="Distance"></span>
+            <br/>{{workout.data.totalDistance/1000 | number:2 }} km</div>
+          <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-circle-o-notch" title="Cadence (avg/max)"></span>
+            <br/>{{workout.data.cadenceAvg}} / {{workout.data.cadenceMax}}</div>
+          <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-heartbeat" title="Heartrate (avg/max)"></span>
+            <br/>{{workout.data.heartrateAvg}} / {{workout.data.heartrateMax}}</div>
+          <div class="col-md-2 col-sm-1 text-center"><span class="fa fa-arrows-v" title="Elevation (gain/loss)"></span>
+            <br/>{{workout.data.elevationGain}} / {{workout.data.elevationLoss}}</div>
+        </div>
+        <div>
+          <div class="row">
+            <div class="col-md-3">
+              <span class="label label-info">Notes</span>
+              <div ng-bind-html="workout.notes">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--       <div class="timeline-footer">
+        <a class="btn btn-primary btn-xs">...</a>
+      </div> -->
+    </div>
+    </span>
+  </li>
+  <!-- END timeline item -->
+  <li>
+    <i class="fa fa-calendar bg-blue"></i>
+  </li>
+</ul>

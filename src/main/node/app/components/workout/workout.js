@@ -8,7 +8,7 @@
  * Controller of the nodeApp
  */
 angular.module('nodeApp')
-  .controller('WorkoutCtrl', ['$scope', '$state', '$stateParams', '$q', 'workoutService', 'mathToolbox', 'openlayersService', function($scope, $state, $stateParams, $q, workoutService, mathToolbox, olService) {
+  .controller('WorkoutCtrl', ['$scope', '$state', '$stateParams', '$q', '$timeout', 'workoutService', 'mathToolbox', 'openlayersService', function($scope, $state, $stateParams, $q, $timeout, workoutService, mathToolbox, olService) {
     $scope.loading = true;
 
     $scope.dataset = [{
@@ -46,18 +46,22 @@ angular.module('nodeApp')
     };
 
     $scope.updateHead = function(e, modal) {
-      console.log(e);
+      $scope.loading = true;
       workoutService.update($scope.workoutHead).then(function(result) {
-        console.log(result);
+      $scope.loading = false;
         angular.element(modal).modal('hide');
       });
     };
 
     $scope.delete = function(e, modal) {
+      $scope.loading = true;
       console.log('deleting workout ' + $scope.workoutHead.id, modal);
       workoutService.delete($scope.workoutHead.id).then(function(result) {
-        console.log(result);
-        $state.go('workouts');
+        $scope.loading = false;
+        angular.element(modal).modal('hide');
+        $timeout(function() {
+          $state.go('workouts');
+        }, 500);
       });
     };
 
