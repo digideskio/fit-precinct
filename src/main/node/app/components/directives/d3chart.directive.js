@@ -31,8 +31,8 @@ window.debounce = window.debounce ||
  * @description
  * # d3chart
  */
-angular.module('nodeApp')
-  .directive('d3chart', ['d3service', function(d3) {
+angular.module('app')
+  .directive('d3chart', ['d3', function(d3) {
     return {
       restrict: 'A',
       scope: {

@@ -6,7 +6,7 @@ var foo;
  * @description
  * # imgUpload
  */
-angular.module('nodeApp')
+angular.module('app')
   .directive('imgUpload', function() {
     return {
       template: '<input type="file"/><span ng-transclude></span>',

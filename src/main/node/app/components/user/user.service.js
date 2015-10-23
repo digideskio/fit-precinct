@@ -1,14 +1,11 @@
-'use strict';
+(function() {
+  'use strict';
+  var module = angular.module('app.user');
 
-/**
- * @ngdoc service
- * @name nodeApp.userService
- * @description
- * # userService
- * Service in the nodeApp.
- */
-angular.module('nodeApp')
-  .factory('userService', ['$http', '$q', '$window', '$interval', 'storageService', 'apiLocation', function userService($http, $q, $window, $interval, storageService, apiLocation) {
+  module.service('userService', service);
+
+  service.$inject = ['$http', '$q', '$window', '$interval', 'storageService', 'apiLocation'];
+  function service($http, $q, $window, $interval, storageService, apiLocation) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var opt = {
       useLocalStorage: false
@@ -171,4 +168,5 @@ angular.module('nodeApp')
       'localStorageAvailable': localStorageAvailable,
       'useLocalStorage': useLocalStorage
     };
-  }]);
+  }
+})();

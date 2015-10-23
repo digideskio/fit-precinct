@@ -1,14 +1,13 @@
-'use strict';
+(function(){
+  'use strict';
 
-/**
- * @ngdoc function
- * @name nodeApp.controller:MainCtrl
- * @description
- * # MainCtrl
- * Controller of the nodeApp
- */
-angular.module('nodeApp')
-  .controller('DashboardCtrl', ['$scope', '$window', '$state', '$q', 'userService', 'workoutService', 'momentService', 'mathToolbox', function($scope, $window, $state, $q, userService, workoutService, moment, mathToolbox) {
+  var module = angular.module('app.dashboard');
+
+  Dashboard.$inject = ['$scope', '$window', '$state', '$q', 'userService', 'workoutService', 'moment', 'mathToolbox'];
+
+  module.controller('Dashboard', Dashboard)
+
+  function Dashboard($scope, $window, $state, $q, userService, workoutService, moment, mathToolbox) {
     $scope.user = null;
 
     $scope.login = function(provider) {
@@ -87,4 +86,5 @@ angular.module('nodeApp')
 
       return deferred.promise;
     }
-  }]);
+  }
+})();

@@ -1,13 +1,11 @@
-'use strict';
-/**
- * @ngdoc function
- * @name nodeApp.controller:UserCtrl
- * @description
- * # UserCtrl
- * Controller of the nodeApp
- */
-angular.module('nodeApp')
-  .controller('UserCtrl', ['$scope', '$state', 'userService', function($scope, $state, userService) {
+(function() {
+  'use strict';
+  var module = angular.module('app.user');
+
+  module.controller('User', User);
+
+  User.$inject = ['$scope', '$state', 'userService'];
+  function User($scope, $state, userService) {
     $scope.useLocalStorage = false;
     $scope.localStorageAvailable = userService.localStorageAvailable();
 
@@ -75,4 +73,5 @@ angular.module('nodeApp')
       });
     };
 
-  }]);
+  }
+})();

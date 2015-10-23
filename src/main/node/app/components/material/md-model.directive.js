@@ -1,13 +1,10 @@
-'use strict';
+(function() {
+  'use strict';
+  var material = angular.module('app.material');
 
-/**
- * @ngdoc directive
- * @name nodeApp.directive:ngModel
- * @description
- * # ngModel
- */
-angular.module('nodeApp')
-  .directive('mdModel', [function() {
+  material.directive('mdModel', directive);
+
+  function directive() {
     return {
       require: 'ngModel',
       scope: {
@@ -23,4 +20,5 @@ angular.module('nodeApp')
         });
       }
     };
-  }]);
+  }
+})();

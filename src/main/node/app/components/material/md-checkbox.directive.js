@@ -1,13 +1,10 @@
-'use strict';
+(function() {
+  'use strict';
+  var material = angular.module('app.material');
 
-/**
- * @ngdoc directive
- * @name nodeApp.directive:material
- * @description
- * # material
- */
-angular.module('nodeApp')
-  .directive('checkbox', function() {
+  material.directive('mdCheckbox', directive);
+
+  function directive() {
     return {
       restrict: 'A',
       template: '<div class="checkbox" ng-transclude></div>',
@@ -17,10 +14,11 @@ angular.module('nodeApp')
         element.find('input[type=checkbox]').after('<span class="checkbox-material"><span class="check"></span></span>');
 
         element.on('change', '.checkbox input[type=checkbox]', function() {
-        	console.log(this);
+          console.log(this);
           angular.element(this).blur();
         });
 
       }
     }
-  });
+  }
+})();

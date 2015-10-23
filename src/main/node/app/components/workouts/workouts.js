@@ -1,14 +1,10 @@
-'use strict';
-
-/**
- * @ngdoc function
- * @name nodeApp.controller:WorkoutsCtrl
- * @description
- * # WorkoutsCtrl
- * Controller of the nodeApp
- */
-angular.module('nodeApp')
-  .controller('WorkoutsCtrl', ['$scope', '$filter', '$state', '$q', '$timeout', 'workoutService', 'momentService', function($scope, $filter, $state, $q, $timeout, workoutService, moment) {
+(function() {
+  'use strict';
+  var module = angular.module('app.workouts');
+  module.controller('Workouts', Workouts);
+  
+  Workouts.$inject = ['$scope', '$filter', '$state', '$q', '$timeout', 'workoutService', 'moment'];
+  function Workouts($scope, $filter, $state, $q, $timeout, workoutService, moment) {
     $scope.loading = true;
     $scope.icon = {
       'unknown': 'fa icon-question',
@@ -103,4 +99,5 @@ angular.module('nodeApp')
     }
 
     $scope.load();
-  }]);
+  }
+})();

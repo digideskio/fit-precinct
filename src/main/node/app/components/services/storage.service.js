@@ -9,7 +9,7 @@
  * # storageService
  * Service in the nodeApp.
  */
-angular.module('nodeApp')
+angular.module('app')
   .service('storageService', function storageService() {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var storageAvailable = false;

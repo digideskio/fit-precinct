@@ -7,7 +7,7 @@
  * # openlayersService
  * Service in the nodeApp.
  */
-angular.module('nodeApp')
+angular.module('app')
   .service('openlayersService', function openlayersService() {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var openlayers = {};

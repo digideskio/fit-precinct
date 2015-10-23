@@ -1,14 +1,12 @@
-'use strict';
+(function() {
+  'use strict';
+  var module = angular.module('app.login');
 
-/**
- * @ngdoc function
- * @name nodeApp.controller:LoginCtrl
- * @description
- * # LoginCtrl
- * Controller of the nodeApp
- */
-angular.module('nodeApp')
-  .controller('LoginCtrl', ['$scope', '$state', 'userService', function($scope, $state, userService) {
+  module.controller('Login', Login);
+
+  Login.$inject = ['$scope', '$state', 'userService'];
+
+  function Login($scope, $state, userService) {
 
     userService.me().then(function() {
       $state.go('dashboard');
@@ -19,4 +17,5 @@ angular.module('nodeApp')
         $state.go('dashboard');
       });
     };
-  }]);
+  }
+})();

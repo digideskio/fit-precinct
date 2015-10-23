@@ -7,7 +7,7 @@
  * # HelpCtrl
  * Controller of the nodeApp
  */
-angular.module('nodeApp')
+angular.module('app')
   .controller('HelpCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',

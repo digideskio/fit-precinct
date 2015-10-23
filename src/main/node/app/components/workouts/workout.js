@@ -1,14 +1,12 @@
-'use strict';
+(function() {
+  'use strict';
 
-/**
- * @ngdoc function
- * @name nodeApp.controller:WorkoutCtrl
- * @description
- * # WorkoutCtrl
- * Controller of the nodeApp
- */
-angular.module('nodeApp')
-  .controller('WorkoutCtrl', ['$scope', '$state', '$stateParams', '$q', '$timeout', 'workoutService', 'mathToolbox', 'openlayersService', function($scope, $state, $stateParams, $q, $timeout, workoutService, mathToolbox, olService) {
+  var module = angular.module('app.workouts');
+
+  module.controller('Workout', Workout);
+
+  Workout.$inject = ['$scope', '$state', '$stateParams', '$q', '$timeout', 'workoutService', 'mathToolbox', 'openlayersService'];
+  function Workout($scope, $state, $stateParams, $q, $timeout, workoutService, mathToolbox, olService) {
     $scope.loading = true;
 
     $scope.dataset = [{
@@ -48,7 +46,7 @@ angular.module('nodeApp')
     $scope.updateHead = function(e, modal) {
       $scope.loading = true;
       workoutService.update($scope.workoutHead).then(function(result) {
-      $scope.loading = false;
+        $scope.loading = false;
         angular.element(modal).modal('hide');
       });
     };
@@ -220,4 +218,5 @@ angular.module('nodeApp')
         }
       });
     }
-  }]);
+  }
+})();

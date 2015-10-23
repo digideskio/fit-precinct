@@ -7,7 +7,7 @@
  * # mathToolbox
  * Service in the nodeApp.
  */
-angular.module('nodeApp')
+angular.module('app')
   .service('mathToolbox', function mathToolbox() {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var math = {};

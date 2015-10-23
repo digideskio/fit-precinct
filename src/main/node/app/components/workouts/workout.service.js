@@ -1,14 +1,10 @@
-'use strict';
+(function() {
+  'use strict';
+  var module = angular.module('app.workouts');
+  module.service('workoutService', WorkoutService);
+  WorkoutService.$inject = ['$http', '$q', 'apiLocation'];
 
-/**
- * @ngdoc service
- * @name nodeApp.workoutService
- * @description
- * # workoutService
- * Service in the nodeApp.
- */
-angular.module('nodeApp')
-  .service('workoutService', ['$http', '$q', 'apiLocation', function workoutService($http, $q, apiLocation) {
+  function WorkoutService($http, $q, apiLocation) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var baseUri = apiLocation + '/web/api/workout';
 
@@ -234,7 +230,7 @@ angular.module('nodeApp')
                   type: key,
                   dataSet: workout.data[key]
                 }));
-              };
+              }
 
               $q.all(appendTasks).then(function(result) {
                 console.log(result);
@@ -257,4 +253,6 @@ angular.module('nodeApp')
       'delete': deleteWorkout,
       'concat': concatWorkouts
     };
-  }]);
+  }
+
+})();

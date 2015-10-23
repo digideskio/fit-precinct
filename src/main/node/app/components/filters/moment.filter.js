@@ -9,7 +9,7 @@
  * # momentFilter
  * Filter in the nodeApp.
  */
-angular.module('nodeApp')
+angular.module('app')
   .filter('momentFilter', function() {
     return function(input, inputFormat, output, outputFormat) {
       if (typeof(output) === 'undefined') {
