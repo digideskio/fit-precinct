@@ -33,7 +33,7 @@
         $scope.useLocalStorage = userService.useLocalStorage();
       }, function(error) {
         console.log('error', error);
-        if (error.status == 401) {
+        if (error.status === 401) {
           $state.go('login');
         }
       });
@@ -48,7 +48,7 @@
         $scope.status = 'OK';
       }, function(error) {
         console.log('error', error);
-        if (error.status == 401) {
+        if (error.status === 401) {
           $state.go('login');
         }
       });

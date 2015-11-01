@@ -3,9 +3,9 @@
 
   var module = angular.module('app.user');
 
-  config.$inject = ['router'];
   module.run(config);
 
+  config.$inject = ['router'];
   function config(router) {
     router.state('user', {
       url: '/user',

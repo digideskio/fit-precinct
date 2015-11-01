@@ -171,8 +171,8 @@
             t = endTime;
             if (i < 1) {
               tMin = header.startTime;
-              for (var key in header.data) {
-                newWorkout.data[key] = header.data[key];
+              for (var firstKeys in header.data) {
+                newWorkout.data[firstKeys] = header.data[firstKeys];
               }
             } else {
               for (var key in header.data) {
@@ -215,8 +215,8 @@
                     workout.data[key][i].data[0] = sMax + parseInt(workout.data[key][i].data[0]);
                   }
                 } else {
-                  for (var i in workout.data[key]) {
-                    workout.data[key][i].offset = workout.data[key][i].offset + offset;
+                  for (var j in workout.data[key]) {
+                    workout.data[key][j].offset = workout.data[key][j].offset + offset;
                   }
                 }
               }

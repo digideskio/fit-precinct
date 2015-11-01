@@ -15,7 +15,7 @@
 
     router.state('workout', {
       url: '/workout/:id',
-      templateUrl: 'components/workout/workout.html',
+      templateUrl: 'components/workouts/workout.html',
       controller: 'Workout'
     });
   }

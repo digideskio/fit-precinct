@@ -25,7 +25,7 @@
     };
     $scope.concat.prepare = function() {
       $scope.checkedWorkouts.sort(function(a, b) {
-        return a.startTime - b.startTime
+        return a.startTime - b.startTime;
       });
       // deep copy header
       $scope.concat.workoutHead = angular.fromJson(angular.toJson($scope.checkedWorkouts[0]));
@@ -39,6 +39,7 @@
       delete $scope.concat.workoutHead.checked;
       workoutService.concat(workouts, $scope.concat.workoutHead).then(function(result) {
         $timeout(function() {
+          console.log(result);
           $scope.loading = false;
           angular.element(modal).modal('hide');
           $scope.$apply(function(scope) {
@@ -62,6 +63,7 @@
       $q.all(deletes).then(function(result) {
         // wait for eventual consistency
         $timeout(function() {
+          console.log(result);
           $scope.loading = false;
           angular.element(modal).modal('hide');
           $scope.load();
@@ -92,11 +94,11 @@
 
         $scope.loading = false;
       }, function(error) {
-        if (error.status == 401) {
+        if (error.status === 401) {
           $state.go('login');
         }
       });
-    }
+    };
 
     $scope.load();
   }

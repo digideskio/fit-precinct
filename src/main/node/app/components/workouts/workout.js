@@ -6,6 +6,7 @@
   module.controller('Workout', Workout);
 
   Workout.$inject = ['$scope', '$state', '$stateParams', '$q', '$timeout', 'workoutService', 'mathToolbox', 'openlayersService'];
+
   function Workout($scope, $state, $stateParams, $q, $timeout, workoutService, mathToolbox, olService) {
     $scope.loading = true;
 
@@ -46,6 +47,7 @@
     $scope.updateHead = function(e, modal) {
       $scope.loading = true;
       workoutService.update($scope.workoutHead).then(function(result) {
+        console.log(result);
         $scope.loading = false;
         angular.element(modal).modal('hide');
       });
@@ -55,6 +57,7 @@
       $scope.loading = true;
       console.log('deleting workout ' + $scope.workoutHead.id, modal);
       workoutService.delete($scope.workoutHead.id).then(function(result) {
+        console.log(result);
         $scope.loading = false;
         angular.element(modal).modal('hide');
         $timeout(function() {

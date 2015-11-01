@@ -18,7 +18,7 @@
         url: '/help',
         templateUrl: 'components/help/help.html',
         controller: 'HelpCtrl'
-      })
+      });
 
     //.otherwise({
     //  redirectTo: '/'
@@ -29,5 +29,5 @@
     $locationProvider.html5Mode(true);
 
     $httpProvider.defaults.withCredentials = true;
-  };
+  }
 })();
