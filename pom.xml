@@ -13,6 +13,7 @@
         <app.id>openfitapi</app.id>
         <app.version>1</app.version>
         <appengine.version>1.9.25</appengine.version>
+        <jersey.version>2.22.1</jersey.version>
         <gcloud.plugin.version>0.9.58.v20150505</gcloud.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -39,6 +40,7 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
+        <!-- datastore -->
         <dependency>
             <groupId>com.googlecode.objectify</groupId>
             <artifactId>objectify</artifactId>
@@ -48,37 +50,37 @@
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet-core</artifactId>
-            <version>2.21</version>
+            <version>${jersey.version}</version>
         </dependency>
         <!--<dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-mvc</artifactId>
-            <version>2.21</version>
+            <version>${jersey.version}</version>
         </dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-mvc-jsp</artifactId>
-            <version>2.21</version>
+            <version>${jersey.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>2.21</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.glassfish.jersey.core</groupId>-->
+            <!--<artifactId>jersey-client</artifactId>-->
+            <!--<version>${jersey.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>2.21</version>
+            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.bundles</groupId>
             <artifactId>jaxrs-ri</artifactId>
-            <version>2.21</version>
+            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-multipart</artifactId>
-            <version>2.21</version>
+            <version>${jersey.version}</version>
         </dependency>
         <!-- logging -->
         <dependency>
@@ -91,6 +93,13 @@
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client-appengine</artifactId>
             <version>1.20.0</version>
+        </dependency>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.6</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Test Dependencies -->

@@ -15,11 +15,20 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * Created by konqi on 23.08.2015.
+ * Repository for user information
+ *
+ * @author konqi
  */
 public class UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
 
+    /**
+     * Sets a username and password for a user
+     * @param user
+     * @param username
+     * @param uploadPassword
+     * @return
+     */
     public static boolean setUploadUser(final User user, final String username, final String uploadPassword) {
         UploadCredential uploadCredential = OfyService.ofy().transact(new Work<UploadCredential>() {
             @Override
@@ -52,6 +61,11 @@ public class UserRepository {
         return OfyService.ofy().load().key(Key.create(UploadCredential.class, username)).now();
     }
 
+    /**
+     * Updates user profile information
+     * @param user
+     * @return
+     */
     public static boolean updateUser(User user){
         User dbUser = OfyService.ofy().load().key(Key.create(User.class, user.getId())).safe();
 

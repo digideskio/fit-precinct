@@ -1,5 +1,6 @@
 package de.konqi.fitapi.common;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,7 +8,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by konqi on 23.08.2015.
+ * Helper class to create hashes of strings and raw byte arrays
+ *
+ * @author konqi
  */
 public class HashBuilder {
     private static final Logger logger = LoggerFactory.getLogger(HashBuilder.class);
@@ -41,12 +44,28 @@ public class HashBuilder {
             this.output = bytes;
         }
 
+        /**
+         * Gets the hash as raw byte array
+         * @return byte array
+         */
         public byte[] asBytes() {
             return output;
         }
 
+        /**
+         * Gets the hash as a hex string representation
+         * @return hex string
+         */
         public String asHex() {
             return bytesToHex(output);
+        }
+
+        /**
+         * Gets the hash as a base64 encoded string
+         * @return base64 encoded string
+         */
+        public String asBase64() {
+            return bytesToBase64(output);
         }
     }
 
@@ -60,6 +79,10 @@ public class HashBuilder {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    private static String bytesToBase64(byte[] bytes) {
+        return new String(Base64.encodeBase64(bytes));
     }
 
 }

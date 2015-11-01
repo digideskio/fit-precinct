@@ -17,6 +17,8 @@ public class OfyService {
 
         ObjectifyService.register(Workout.class);
         ObjectifyService.register(WorkoutData.class);
+
+        ObjectifyService.register(WorkoutShare.class);
     }
 
     public static Objectify ofy() {

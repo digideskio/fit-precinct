@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Repository class for accessing the databse / datastore
+ * Repository class for workouts (database abstraction layer)
  *
  * @author konqi
  */
@@ -26,8 +26,8 @@ public class WorkoutRepository {
     /**
      * Loads all workout headers for a user (this will not work indefinably)
      * FIXME Introduce Paging at some point
-     * @param user
-     * @return
+     * @param user user to get workouts for
+     * @return list of workouts
      */
     public static List<Workout> getWorkoutListForUser(User user) {
         return OfyService.ofy().load().type(Workout.class).ancestor(Ref.create(user)).list();
@@ -35,9 +35,9 @@ public class WorkoutRepository {
 
     /**
      * Retrieves the latest numWorkouts workout headers for a user
-     * @param user
-     * @param numWorkouts
-     * @return
+     * @param user user to get workouts for
+     * @param numWorkouts number of newest workouts to return
+     * @return list of new workouts with max numWorkouts elements
      */
     public static List<Workout> getLastWorkoutsForUser(User user, int numWorkouts) {
         return OfyService.ofy().load().type(Workout.class).ancestor(Ref.create(user)).order("-startTime").limit(numWorkouts).list();
@@ -46,9 +46,10 @@ public class WorkoutRepository {
 
     /**
      * Retrieves all workout headers for a user for a given type (Could be useful for filtering in the web frontend)
-     * @param user
-     * @param type
-     * @return
+     * FIXME Introduce Paging at some point
+     * @param user user to get workouts for
+     * @param type type of workout to get
+     * @return list of workouts of a certain type
      */
     public static List<Workout> getWorkoutListForUser(User user, String type) {
         return OfyService.ofy().load().type(Workout.class).ancestor(Ref.create(user)).filter("type", type).list();
@@ -57,10 +58,10 @@ public class WorkoutRepository {
     /**
      * Retrieves a list of workout headers for a user in between since and until
      *
-     * @param user
-     * @param since
-     * @param until
-     * @return
+     * @param user user to get workouts for
+     * @param since date from which onward to include workouts
+     * @param until date to which until include workouts
+     * @return list of workouts in the specified timespan
      */
     public static List<Workout> getWorkoutListForUser(User user, Date since, Date until) {
         Query<Workout> query = OfyService.ofy().load().type(Workout.class).ancestor(Ref.create(user));
@@ -77,9 +78,9 @@ public class WorkoutRepository {
     /**
      * Retrieves all data associated with a user's workout (includes recorded data and workout header)
      *
-     * @param webApiUser
-     * @param workoutId
-     * @return
+     * @param webApiUser user owning this workout
+     * @param workoutId id of the workout to retrieve data for
+     * @return list of data objects available for this workout
      */
     public static List<Object> getWorkoutForUser(WebApiUser webApiUser, Long workoutId) {
         return OfyService.ofy().load().ancestor(Key.create(Key.create(webApiUser), Workout.class, workoutId)).list();
@@ -88,9 +89,9 @@ public class WorkoutRepository {
     /**
      * Retrieves a workout header for a given user
      *
-     * @param webApiUser
-     * @param workoutId
-     * @return
+     * @param webApiUser user owning this workout
+     * @param workoutId id of the workout to retrieve header information for
+     * @return workout header information
      */
     public static Workout getWorkoutHeadForUser(WebApiUser webApiUser, Long workoutId) {
         return OfyService.ofy().load().key(Key.create(Key.create(webApiUser), Workout.class, workoutId)).now();
@@ -99,9 +100,9 @@ public class WorkoutRepository {
     /**
      * Updates the header information of a workout
      *
-     * @param webApiUser
-     * @param workout
-     * @return
+     * @param webApiUser user owning this workout
+     * @param workout updated workout entity
+     * @return true if successful, otherwise false
      */
     public static boolean updateWorkoutHeadForUser(WebApiUser webApiUser, Workout workout) {
         if(workout.getUser().getKey().getId() == webApiUser.getId()){
@@ -115,9 +116,9 @@ public class WorkoutRepository {
     /**
      * Deletes a user's workout by the workout id
      *
-     * @param user
-     * @param workoutId
-     * @return
+     * @param user user owning this workout
+     * @param workoutId id of the workout to delete
+     * @return true if successful
      */
     public static boolean deleteWorkoutForUser(User user, Long workoutId) {
         OfyService.ofy().delete().key(Key.create(Key.create(user), Workout.class, workoutId)).now();
@@ -126,14 +127,14 @@ public class WorkoutRepository {
 
     /**
      * Creates a new workout header in the database (Used for manually creating workouts)
-     * @param user
-     * @param workout
-     * @return
+     * @param user user creating the workout
+     * @param workout workout header information
+     * @return inserted workout header (including id)
      */
     public static Workout insertHead(User user, Workout workout) {
         // Overwrite workout owner if falsely provided
         workout.setUser(Ref.create(user));
-        // Let datastore auto assign an id
+        // Let datastore auto assign an id (alternatively could allocate an id and lazy save entity)
         workout.setId(null);
 
         Key<Workout> workoutKey = OfyService.ofy().save().entity(workout).now();
@@ -145,10 +146,10 @@ public class WorkoutRepository {
     /**
      * Appends data to an existing workout (Does not care whether the data is valid)
      *
-     * @param webApiUser
-     * @param workoutId
-     * @param data
-     * @return
+     * @param webApiUser user appending the workout
+     * @param workoutId id of the workout to append data to
+     * @param data data to append to the workout
+     * @return true if successful, otherwise false
      */
     public static boolean appendData(WebApiUser webApiUser, Long workoutId, WorkoutData data) {
         // Make sure the data is basically valid

@@ -49,10 +49,10 @@ public class UserResource {
     private static final Logger logger = LoggerFactory.getLogger(UserResource.class);
 
     /**
-     *
-     * @param request
-     * @param response
-     * @param sc
+     * Gets the profile of the currently logged in user
+     * @param request HttpServletRequest injected by jersey
+     * @param response HttpServletResponse injected by jersey
+     * @param sc SecurityContext injected by jersey
      * @return
      */
     @GET
@@ -74,10 +74,10 @@ public class UserResource {
     }
 
     /**
-     *
-     * @param request
-     * @param response
-     * @param sc
+     * Gets an upload URL to upload a user profile picture
+     * @param request HttpServletRequest injected by jersey
+     * @param response HttpServletResponse injected by jersey
+     * @param sc SecurityContext injected by jersey
      * @return
      */
     @GET
@@ -96,11 +96,11 @@ public class UserResource {
     }
 
     /**
-     *
+     * Updates the user profile including profile picture. Method should only be called via redirect from blobstore upload.
      * @param multiPart
-     * @param request
-     * @param response
-     * @param sc
+     * @param request HttpServletRequest injected by jersey
+     * @param response HttpServletResponse injected by jersey
+     * @param sc SecurityContext injected by jersey
      * @return
      */
     @POST
@@ -137,11 +137,11 @@ public class UserResource {
     }
 
     /**
-     *
+     * Updates user profile information excluding profile picture
      * @param updateUser
-     * @param request
-     * @param response
-     * @param sc
+     * @param request HttpServletRequest injected by jersey
+     * @param response HttpServletResponse injected by jersey
+     * @param sc SecurityContext injected by jersey
      * @return
      */
     @POST
@@ -167,9 +167,9 @@ public class UserResource {
     }
 
     /**
-     *
+     * Sets username and password for uploading data via openfitapi
      * @param params
-     * @param sc
+     * @param sc SecurityContext injected by jersey
      * @return
      */
     @PUT
@@ -188,9 +188,9 @@ public class UserResource {
     }
 
     /**
-     *
-     * @param type
-     * @param request
+     * Method for Login with OpenID connect
+     * @param type type of login (google, etc.)
+     * @param request HttpServletRequest injected by jersey
      * @return
      */
     @GET
@@ -222,15 +222,15 @@ public class UserResource {
     }
 
     /**
-     *
-     * @param type
-     * @param state
-     * @param code
+     * Method for OpenID connect auth callback
+     * @param type oauth2 auth type
+     * @param state session state token (CSRF prev
+     * @param code oauth2 auth code
      * @param authuser
      * @param prompt
      * @param sessionState
-     * @param request
-     * @return
+     * @param request http request injected via jersey
+     * @return response containing session cookie
      */
     @GET
     @Path("/login/{type}/oauth2callback")

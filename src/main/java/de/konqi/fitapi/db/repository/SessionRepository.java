@@ -13,16 +13,28 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 /**
- * Created by konqi on 23.08.2015.
+ * Repository for active web sessions
+ *
+ * @author konqi
  */
 public class SessionRepository {
     private static final Logger logger = LoggerFactory.getLogger(SessionRepository.class);
     private static final long SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7;
 
+    /**
+     *
+     * @param user
+     * @return
+     */
     public static String createSession(final User user) {
         return createSession(Ref.create(user));
     }
 
+    /**
+     *
+     * @param userRef
+     * @return
+     */
     public static String createSession(final Ref<User> userRef) {
         assert userRef != null;
 
@@ -49,7 +61,11 @@ public class SessionRepository {
         return session.getId();
     }
 
-
+    /**
+     * Gets the user for a valid session id
+     * @param sessionId id of the session
+     * @return authorized user for session
+     */
     public static User getSession(String sessionId) {
         Session session = OfyService.ofy().load().key(Key.create(Session.class, sessionId)).now();
         if (session == null) return null;
