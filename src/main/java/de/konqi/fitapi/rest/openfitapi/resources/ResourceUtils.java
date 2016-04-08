@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.primitives.Longs;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
+import de.konqi.fitapi.Constants;
 import de.konqi.fitapi.db.OfyService;
 import de.konqi.fitapi.db.domain.DataSet;
 import de.konqi.fitapi.db.domain.WorkoutData;
@@ -21,7 +22,7 @@ import java.util.*;
 public class ResourceUtils {
     private static final Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
 
-    private static final int MAX_SETS = 100000;
+    private static final int MAX_SETS = Constants.MAX_SETS;
 
     /**
      * load specific workout of a user

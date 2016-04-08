@@ -11,4 +11,6 @@ public class Constants {
     public static final String CLIENT_SECRET = "xycnrYFnpQmjGIVCX7toA_kH";
 
     public static final String SALT = "<g}RNnm@?n*Ad#gn[\\Ts6LdAq(~u/#%g\"myhs)@@&eJG<6/894%8uD>Xy}sC[4-,mB$>.EJ^:qXh8s%c7@8nHe#{k<vveWWfW+Dn.>we{J)jAhwhf7Pay-S4Tk),k<PX";
+
+    public static final int MAX_SETS = 100000;
 }

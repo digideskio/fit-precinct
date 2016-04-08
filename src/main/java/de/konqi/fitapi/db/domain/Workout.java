@@ -16,7 +16,8 @@ import java.util.Map;
  * Created by konqi on 16.08.2015.
  */
 @Entity
-public @Data class Workout {
+@Data
+public class Workout {
     @JsonIgnore
     @Parent
     private Ref<User> user;
