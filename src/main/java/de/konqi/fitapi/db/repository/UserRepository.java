@@ -61,6 +61,10 @@ public class UserRepository {
         return OfyService.ofy().load().key(Key.create(UploadCredential.class, username)).now();
     }
 
+    public static User getUserByEmail(String email){
+        return OfyService.ofy().load().type(User.class).filter("email", email).first().now();
+    }
+
     /**
      * Updates user profile information
      * @param user

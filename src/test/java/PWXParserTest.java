@@ -18,9 +18,9 @@ public class PWXParserTest {
         PwxParser pwxParser = new PwxParser();
         PwxFile pwxFile = pwxParser.parse(PWXParserTest.class.getResourceAsStream("20160403_152547_1.pwx"));
 
-        PwxWorkoutConverter pwxWorkoutCoverter = new PwxWorkoutConverter(pwxFile);
-        Workout workout = pwxWorkoutCoverter.getWorkout();
-        HashMap<String, WorkoutData> samples = pwxWorkoutCoverter.getSamples();
+        PwxWorkoutConverter pwxWorkoutConverter = new PwxWorkoutConverter(pwxFile);
+        Workout workout = pwxWorkoutConverter.getWorkout();
+        HashMap<String, WorkoutData> samples = pwxWorkoutConverter.getSamples();
 
         long duration = System.currentTimeMillis() - start;
         System.out.println("done in " + duration + "ms");

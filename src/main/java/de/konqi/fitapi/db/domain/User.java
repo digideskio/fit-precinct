@@ -20,6 +20,7 @@ public class User implements java.security.Principal {
     @Id
     private Long id;
     private String name;
+    @Index
     private String email;
     private Map<String, String> profileData = null; // new HashMap<>();
     @JsonIgnore

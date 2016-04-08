@@ -23,18 +23,28 @@ public class PwxWorkoutConverter {
 
         for (Sample sample : pwxFile.getSamples()) {
             // cadence
-            put(dataMap, "cadence", sample.getTimeoffset(), sample.getCad());
+            if (sample.getCad() != null) {
+                put(dataMap, "cadence", sample.getTimeoffset(), sample.getCad().toString());
+            }
 
             // elevation
-            put(dataMap, "elevation", sample.getTimeoffset(), sample.getAlt());
+            if (sample.getAlt() != null) {
+                put(dataMap, "elevation", sample.getTimeoffset(), sample.getAlt().toString());
+            }
             // distance
-            put(dataMap, "distance", sample.getTimeoffset(), sample.getDist());
+            if (sample.getDist() != null) {
+                put(dataMap, "distance", sample.getTimeoffset(), sample.getDist().toString());
+            }
 
             // heartrate
-            put(dataMap, "heartrate", sample.getTimeoffset(), sample.getHr());
+            if (sample.getHr() != null) {
+                put(dataMap, "heartrate", sample.getTimeoffset(), sample.getHr().toString());
+            }
 
             // location
-            put(dataMap, "location", sample.getTimeoffset(), sample.getLat(), sample.getLon());
+            if (sample.getLat() != null && sample.getLon() != null) {
+                put(dataMap, "location", sample.getTimeoffset(), sample.getLat().toString(), sample.getLon().toString());
+            }
         }
 
         // TODO Handle overflow & splitting

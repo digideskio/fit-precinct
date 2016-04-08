@@ -21,35 +21,38 @@ public class PwxParser {
 
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(is);
+        try {
+            while (xmlStreamReader.hasNext()) {
+                switch (xmlStreamReader.getEventType()) {
+                    case XMLStreamConstants.END_DOCUMENT:
+                        xmlStreamReader.close();
+                        break;
 
-        while (xmlStreamReader.hasNext()) {
-            switch (xmlStreamReader.getEventType()) {
-                case XMLStreamConstants.END_DOCUMENT:
-                    xmlStreamReader.close();
-                    break;
-
-                case XMLStreamConstants.START_ELEMENT:
-                    if (xmlStreamReader.getLocalName().equalsIgnoreCase("sample")) {
-                        Sample sample = parseSample(xmlStreamReader);
-                        samples.add(sample);
-                    } else if (xmlStreamReader.getLocalName().equalsIgnoreCase("segment")) {
-                        while (xmlStreamReader.getEventType() != XMLStreamConstants.END_ELEMENT || !xmlStreamReader.getLocalName().equalsIgnoreCase("segment")) {
-                            xmlStreamReader.next();
+                    case XMLStreamConstants.START_ELEMENT:
+                        if (xmlStreamReader.getLocalName().equalsIgnoreCase("sample")) {
+                            Sample sample = parseSample(xmlStreamReader);
+                            samples.add(sample);
+                        } else if (xmlStreamReader.getLocalName().equalsIgnoreCase("segment")) {
+                            while (xmlStreamReader.getEventType() != XMLStreamConstants.END_ELEMENT || !xmlStreamReader.getLocalName().equalsIgnoreCase("segment")) {
+                                xmlStreamReader.next();
+                            }
+                        } else if (xmlStreamReader.getLocalName().equalsIgnoreCase("summarydata")) {
+                            parseSummary(xmlStreamReader, summary);
+                        } else if (xmlStreamReader.getLocalName().equalsIgnoreCase("sportType")) {
+                            parseSingle(xmlStreamReader, summary);
+                        } else if (xmlStreamReader.getLocalName().equalsIgnoreCase("time")) {
+                            parseSingle(xmlStreamReader, summary);
                         }
-                    } else if (xmlStreamReader.getLocalName().equalsIgnoreCase("summarydata")) {
-                        parseSummary(xmlStreamReader, summary);
-                    } else if (xmlStreamReader.getLocalName().equalsIgnoreCase("sportType")) {
-                        parseSingle(xmlStreamReader, summary);
-                    } else if (xmlStreamReader.getLocalName().equalsIgnoreCase("time")) {
-                        parseSingle(xmlStreamReader, summary);
-                    }
-                    break;
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+
+                xmlStreamReader.next();
             }
-
-            xmlStreamReader.next();
+        } finally {
+            xmlStreamReader.close();
         }
 
         pwxFile.setSummary(summary);

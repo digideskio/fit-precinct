@@ -1,18 +1,20 @@
 package de.konqi.fitapi.appengine;
 
+import de.konqi.fitapi.AppengineEnv;
+import de.konqi.fitapi.rest.pwx.PwxImporter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -35,7 +37,12 @@ public class MailHandlerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        log.info("Mail Handler Servlet, request path:" + req.getServletPath());
+        String requestURI = req.getRequestURI();
+        log.info("Mail Handler Servlet, request path:" + requestURI);
+        int from = requestURI.lastIndexOf('/') + 1;
+        int to = requestURI.indexOf('@');
+        String localPart = requestURI.substring(from, to);
+        log.info("local part:" + localPart);
 
         Properties properties = new Properties();
         Session session = Session.getDefaultInstance(properties, null);
@@ -44,7 +51,13 @@ public class MailHandlerServlet extends HttpServlet {
             if (msg.getFrom().length != 1) {
                 throw new IllegalArgumentException("Message must have a single sender address.");
             }
-            log.info(msg.getFrom()[0].toString());
+
+            Address address = msg.getFrom()[0];
+            String senderEmail = toString();
+            if (address instanceof InternetAddress) {
+                senderEmail = ((InternetAddress) address).getAddress();
+            }
+            log.info("Email from: " + senderEmail);
 
             Object content = msg.getContent();
             if (content instanceof String) {
@@ -55,14 +68,22 @@ public class MailHandlerServlet extends HttpServlet {
                 Multipart multipart = (Multipart) content;
                 for (int i = 0; i < multipart.getCount(); i++) {
                     BodyPart bodyPart = multipart.getBodyPart(i);
-                    if (!bodyPart.getFileName().isEmpty()) {
-                        log.info("Filename: " + bodyPart.getFileName());
+                    String fileName = bodyPart.getFileName();
+                    if (fileName != null && !fileName.isEmpty()) {
+                        log.info("Filename: " + fileName);
+                        if (fileName.toLowerCase().matches("^.*\\.pwx$")) {
+                            log.info("Found PWX attachment. Attempting to import file for user with email '" + senderEmail + "'.");
+                            if (bodyPart.getContent() instanceof InputStream) {
+                                InputStream is = (InputStream) bodyPart.getContent();
+                                PwxImporter.importPwx(senderEmail, is);
+                            }
+                        }
                     }
-                    
+
                     log.info(bodyPart.getContent().getClass().getName());
                 }
             }
-        } catch (MessagingException e) {
+        } catch (MessagingException | IllegalAccessException | XMLStreamException | NoSuchFieldException e) {
             log.error("Unable to parse message.", e);
         }
     }
