@@ -1,7 +1,6 @@
 package de.konqi.fitapi.appengine;
 
-import de.konqi.fitapi.AppengineEnv;
-import de.konqi.fitapi.rest.pwx.PwxImporter;
+import de.konqi.fitapi.common.importer.PwxImporter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.mail.*;
@@ -44,6 +43,8 @@ public class MailHandlerServlet extends HttpServlet {
         String localPart = requestURI.substring(from, to);
         log.info("local part:" + localPart);
 
+        MailTypes mailType = Enum.valueOf(MailTypes.class, localPart.toUpperCase());
+
         Properties properties = new Properties();
         Session session = Session.getDefaultInstance(properties, null);
         try {
@@ -71,11 +72,11 @@ public class MailHandlerServlet extends HttpServlet {
                     String fileName = bodyPart.getFileName();
                     if (fileName != null && !fileName.isEmpty()) {
                         log.info("Filename: " + fileName);
-                        if (fileName.toLowerCase().matches("^.*\\.pwx$")) {
+                        if (fileName.toLowerCase().matches("^.*\\." + mailType.getExtension())) {
                             log.info("Found PWX attachment. Attempting to import file for user with email '" + senderEmail + "'.");
                             if (bodyPart.getContent() instanceof InputStream) {
                                 InputStream is = (InputStream) bodyPart.getContent();
-                                PwxImporter.importPwx(senderEmail, is);
+                                mailType.getImporter().importFromStream(senderEmail, is);
                             }
                         }
                     }
@@ -83,7 +84,7 @@ public class MailHandlerServlet extends HttpServlet {
                     log.info(bodyPart.getContent().getClass().getName());
                 }
             }
-        } catch (MessagingException | IllegalAccessException | XMLStreamException | NoSuchFieldException e) {
+        } catch (MessagingException e) {
             log.error("Unable to parse message.", e);
         }
     }

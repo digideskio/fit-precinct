@@ -1,9 +1,11 @@
-package de.konqi.fitapi.rest.pwx;
+package de.konqi.fitapi.common.importer;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import de.konqi.fitapi.common.pwx.PwxFile;
-import de.konqi.fitapi.common.pwx.PwxParser;
+import de.konqi.fitapi.common.fit.FitData;
+import de.konqi.fitapi.common.fit.FitHeader;
+import de.konqi.fitapi.common.fit.FitParser;
+import de.konqi.fitapi.common.fit.FitWorkoutConverter;
 import de.konqi.fitapi.common.pwx.PwxWorkoutConverter;
 import de.konqi.fitapi.db.OfyService;
 import de.konqi.fitapi.db.domain.User;
@@ -12,30 +14,30 @@ import de.konqi.fitapi.db.domain.WorkoutData;
 import de.konqi.fitapi.db.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by konqi on 08.04.2016.
+ * Created by konqi on 08.05.2016.
  */
 @Slf4j
-public class PwxImporter {
-    public static void importPwx(String userEmail, InputStream is) throws NoSuchFieldException, IllegalAccessException, XMLStreamException {
+public class FitImporter implements Importer {
+    public void importFromStream(String userEmail, InputStream is) throws IOException {
         User user = UserRepository.getUserByEmail(userEmail);
         if (user != null) {
             log.info("Userid for email '" + userEmail + "' is " + user.getId() + ".");
 
             log.info("Parsing file.");
-            PwxParser pwxParser = new PwxParser();
-            PwxFile pwxFile = pwxParser.parse(is);
+            FitParser fitParser = new FitParser();
+            FitHeader fitHeader = fitParser.parseHeader(is);
+            FitData fitData = fitParser.readRecords(is, fitHeader.getDataSize());
 
             log.info("Converting to database format.");
-            PwxWorkoutConverter pwxWorkoutConverter = new PwxWorkoutConverter(pwxFile);
-            Workout workout = pwxWorkoutConverter.getWorkout();
+            FitWorkoutConverter fitWorkoutConverter = new FitWorkoutConverter(fitData);
+            Workout workout = fitWorkoutConverter.getWorkout();
 
             log.info("Saving.");
             // Allocate workout id
@@ -44,7 +46,7 @@ public class PwxImporter {
             workout.setId(workoutKey.getId());
             log.info("The workout will have the id '" + workoutKey.toString() + "'.");
 
-            HashMap<String, WorkoutData> samples = pwxWorkoutConverter.getSamples();
+            HashMap<String, WorkoutData> samples = fitWorkoutConverter.getSamples();
             List<Object> entitiesToSave = new ArrayList<>(samples.keySet().size()+1);
 
             for (WorkoutData value : samples.values()) {

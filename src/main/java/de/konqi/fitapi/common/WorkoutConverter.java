@@ -1,6 +1,7 @@
 package de.konqi.fitapi.common;
 
 import de.konqi.fitapi.db.domain.DataSet;
+import de.konqi.fitapi.db.domain.Workout;
 import de.konqi.fitapi.db.domain.WorkoutData;
 
 import java.util.HashMap;
@@ -25,4 +26,5 @@ public abstract class WorkoutConverter {
     }
 
     abstract public HashMap<String, WorkoutData> getSamples();
+    abstract public Workout getWorkout();
 }

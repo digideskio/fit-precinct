@@ -1,10 +1,13 @@
 package de.konqi.fitapi.common.fit;
 
 import de.konqi.fitapi.common.WorkoutConverter;
+import de.konqi.fitapi.common.pwx.Summary;
+import de.konqi.fitapi.db.domain.Workout;
 import de.konqi.fitapi.db.domain.WorkoutData;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,12 +17,12 @@ import java.util.Map;
 public class FitWorkoutConverter extends WorkoutConverter {
     private final FitData fitData;
 
-    public FitWorkoutConverter(FitData fitData){
+    public FitWorkoutConverter(FitData fitData) {
         this.fitData = fitData;
     }
 
     public HashMap<String, WorkoutData> getSamples() {
-        Long startTime = (Long)fitData.getMeta().get(FitGlobalMessageNum.SESSION).get(FitSessionType.STARTTIME);
+        Long startTime = (Long) fitData.getMeta().get(FitGlobalMessageNum.SESSION).get(FitSessionType.STARTTIME);
         HashMap<String, WorkoutData> dataMap = new HashMap<>();
 
         Map<Object, Map<Enum, Object>> activities = fitData.getData().get(FitGlobalMessageNum.RECORD);
@@ -29,35 +32,101 @@ public class FitWorkoutConverter extends WorkoutConverter {
         for (Object ts : activities.keySet()) {
             Map<Enum, Object> datapoint = activities.get(ts);
             // calculate offset
-            Long offset = (Long)ts - startTime;
+            Long offset = (Long) ts - startTime;
 
             // convert GPS semicircles to decimal degrees
             Object a = datapoint.get(FitRecordType.LATITUDE);
             Object b = datapoint.get(FitRecordType.LONGITUDE);
-            if(a != null && b != null) {
+            if (a != null && b != null) {
                 double latitude = ((Integer) a) * multipicator;
                 double longitude = ((Integer) b) * multipicator;
                 put(dataMap, "location", offset, Double.toString(latitude), Double.toString(longitude));
             }
 
             a = datapoint.get(FitRecordType.DISTANCE);
-            if(a != null){
-                put(dataMap, "distance", offset, Long.toString((long)a));
+            if (a != null) {
+                put(dataMap, "distance", offset, Long.toString((long) a));
             }
             a = datapoint.get(FitRecordType.ALTITUDE);
-            if(a != null){
-                put(dataMap, "elevation", offset, Integer.toString((int)a));
+            if (a != null) {
+                put(dataMap, "elevation", offset, Integer.toString((int) a));
             }
             a = datapoint.get(FitRecordType.HEARTRATE);
-            if(a != null){
-                put(dataMap, "heartrate", offset, Integer.toString((int)a));
+            if (a != null) {
+                put(dataMap, "heartrate", offset, Integer.toString((int) a));
             }
             a = datapoint.get(FitRecordType.CADENCE);
-            if(a != null){
-                put(dataMap, "cadence", offset, Integer.toString((int)a));
+            if (a != null) {
+                put(dataMap, "cadence", offset, Integer.toString((int) a));
             }
         }
 
         return dataMap;
+    }
+
+    @Override
+    public Workout getWorkout() {
+        Workout workout = new Workout();
+
+        Map<Enum, Object> sessionData = fitData.getMeta().get(FitGlobalMessageNum.SESSION);
+
+        long startTime = (long) sessionData.get(FitSessionType.STARTTIME);
+        workout.setStartTime(new Date(startTime));
+
+        FitSport sport = FitSport.getByValue((Integer) sessionData.get(FitSessionType.SPORT));
+        workout.setType(sport.toString().toLowerCase());
+
+        sessionData.get(FitSessionType.EVENT);
+        sessionData.get(FitSessionType.EVENTTYPE);
+
+        Object val = sessionData.get(FitSessionType.AVGHR);
+        if (val != null) {
+            workout.getData().put("heartrateAvg", Double.valueOf((Integer) val));
+        }
+        val = sessionData.get(FitSessionType.MINHR);
+        if (val != null) {
+            workout.getData().put("heartrateMin", Double.valueOf((Integer) val));
+        }
+        val = sessionData.get(FitSessionType.MAXHR);
+        if (val != null) {
+            workout.getData().put("heartrateMax", Double.valueOf((Integer) val));
+        }
+
+        val = sessionData.get(FitSessionType.AVGSPEED);
+        if (val != null) {
+            workout.getData().put("speedAvg", Double.valueOf((Integer) val));
+        }
+        val = sessionData.get(FitSessionType.MAXSPEED);
+        if (val != null) {
+            workout.getData().put("speedMax", Double.valueOf((Integer) val));
+        }
+
+        val = sessionData.get(FitSessionType.AVGCADENCE);
+        if (val != null) {
+            workout.getData().put("cadenceAvg", Double.valueOf((Integer)val));
+        }
+
+        val = sessionData.get(FitSessionType.ASCENT);
+        if (val != null) {
+            workout.getData().put("elevationGain", Double.valueOf((Integer)val));
+        }
+        val = sessionData.get(FitSessionType.DECENT);
+        if (val != null) {
+            workout.getData().put("elevationLoss", Double.valueOf((Integer)val));
+        }
+
+
+        val = sessionData.get(FitSessionType.TOTALTIMERTIME);
+        if (val != null) {
+            workout.getData().put("clockDuration", Double.valueOf((Long)val));
+        }
+
+//        workout.getData().put("totalDistance", summary.getDist());
+
+        val = sessionData.get(FitSessionType.AVGPOWER);
+        if (val != null) {
+            workout.getData().put("powerAvg", Double.valueOf((Integer)val));
+        }
+        return workout;
     }
 }

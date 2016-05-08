@@ -2,6 +2,7 @@ import de.konqi.fitapi.common.fit.FitData;
 import de.konqi.fitapi.common.fit.FitHeader;
 import de.konqi.fitapi.common.fit.FitParser;
 import de.konqi.fitapi.common.fit.FitWorkoutConverter;
+import de.konqi.fitapi.db.domain.Workout;
 import de.konqi.fitapi.db.domain.WorkoutData;
 import org.junit.Test;
 
@@ -26,11 +27,12 @@ public class FitParserTest {
         System.out.println("parser done in " + duration + "ms");
 
         FitWorkoutConverter fitWorkoutConverter = new FitWorkoutConverter(fitData);
+        Workout workout = fitWorkoutConverter.getWorkout();
         HashMap<String, WorkoutData> dataMap = fitWorkoutConverter.getSamples();
 
         duration = System.currentTimeMillis() - start;
         System.out.println("conversion done in " + duration + "ms");
 
-        // System.out.println(dataMap);
+        System.out.println(workout);
     }
 }
