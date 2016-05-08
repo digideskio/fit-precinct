@@ -96,7 +96,7 @@
     <i ng-if="item.type=='workout'" ng-class="icon[item.symbol]"></i>
     <div ng-if="item.type=='workout'" class="timeline-item" ng-init="::workout = item.value">
       <span class="time"><i class="fa fa-clock-o"></i> {{::workout.startTime | momentFilter:'HH:mm'}}<div md-checkbox class="checkbox-warning"><label><input type="checkbox" ng-model="item.value.checked" ng-change="concat.toggleWorkout(item.value)"></label></div></span>
-      <h3 class="timeline-header"><a ui-sref="workout({id:workout.id})">{{workout.name}}</a> <small ng-init="time = workout.data.clockDuration">{{time  | momentFilter:'seconds':'duration':'hours'}}:{{time | momentFilter:'seconds':'duration':'minutes'}} h, {{workout.data.totalDistance/1000 | number:2 }} km</small></h3>
+      <h3 class="timeline-header"><a ui-sref="workout({id:workout.id})">{{workout.name || "unnamed workout"}}</a> <small ng-init="time = workout.data.clockDuration">{{time  | momentFilter:'seconds':'duration':'hours'}}:{{time | momentFilter:'seconds':'duration':'minutes'}} h, {{workout.data.totalDistance/1000 | number:2 }} km</small></h3>
       <div class="timeline-body">
         <div class="row">
           <div class="col-md-4"><span class="fa fa-clock-o" title="Duration"></span> Total / Active

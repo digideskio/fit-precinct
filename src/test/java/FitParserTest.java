@@ -18,7 +18,7 @@ public class FitParserTest {
     public void parseFile() throws IOException {
         long start = System.currentTimeMillis();
         FitParser parser = new FitParser();
-        InputStream resourceAsStream = FitParserTest.class.getResourceAsStream("20160403_120310_3.fit");
+        InputStream resourceAsStream = FitParserTest.class.getResourceAsStream("20160410_144528_2.fit"); // "20160403_120310_3.fit"
         FitHeader header = parser.parseHeader(resourceAsStream);
         System.out.println(header.toString());
         FitData fitData = parser.readRecords(resourceAsStream, header.getDataSize());

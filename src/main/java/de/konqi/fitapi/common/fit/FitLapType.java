@@ -21,6 +21,8 @@ public enum FitLapType {
     MAX_SPEED(14),
     AVG_HR(15),
     MAX_HR(16),
+    ASCENT(21),
+    DESCENT(22),
     AVG_ALT(42),
     MAX_ALT(43),
     AVG_GPS_GRADE(45),

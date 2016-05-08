@@ -1,7 +1,6 @@
 package de.konqi.fitapi.common.fit;
 
 import de.konqi.fitapi.common.WorkoutConverter;
-import de.konqi.fitapi.common.pwx.Summary;
 import de.konqi.fitapi.db.domain.Workout;
 import de.konqi.fitapi.db.domain.WorkoutData;
 
@@ -15,6 +14,7 @@ import java.util.Map;
  * Created by konqi on 08.05.2016.
  */
 public class FitWorkoutConverter extends WorkoutConverter {
+    public static final long FIT_TIME_OFFSET = 631065600000l;
     private final FitData fitData;
 
     public FitWorkoutConverter(FitData fitData) {
@@ -43,18 +43,26 @@ public class FitWorkoutConverter extends WorkoutConverter {
                 put(dataMap, "location", offset, Double.toString(latitude), Double.toString(longitude));
             }
 
+            a = datapoint.get(FitRecordType.SPEED);
+            if (a != null) {
+                put(dataMap, "speed", offset, Double.toString((long) a / 1000));
+            }
+
             a = datapoint.get(FitRecordType.DISTANCE);
             if (a != null) {
-                put(dataMap, "distance", offset, Long.toString((long) a));
+                put(dataMap, "distance", offset, Double.toString((long) a / 100));
             }
+
             a = datapoint.get(FitRecordType.ALTITUDE);
             if (a != null) {
-                put(dataMap, "elevation", offset, Integer.toString((int) a));
+                put(dataMap, "elevation", offset, Double.toString(((int) a / 5) - 500));
             }
+
             a = datapoint.get(FitRecordType.HEARTRATE);
             if (a != null) {
                 put(dataMap, "heartrate", offset, Integer.toString((int) a));
             }
+
             a = datapoint.get(FitRecordType.CADENCE);
             if (a != null) {
                 put(dataMap, "cadence", offset, Integer.toString((int) a));
@@ -71,13 +79,13 @@ public class FitWorkoutConverter extends WorkoutConverter {
         Map<Enum, Object> sessionData = fitData.getMeta().get(FitGlobalMessageNum.SESSION);
 
         long startTime = (long) sessionData.get(FitSessionType.STARTTIME);
-        workout.setStartTime(new Date(startTime));
+        workout.setStartTime(new Date(startTime * 1000 + FIT_TIME_OFFSET));
 
         FitSport sport = FitSport.getByValue((Integer) sessionData.get(FitSessionType.SPORT));
         workout.setType(sport.toString().toLowerCase());
 
-        sessionData.get(FitSessionType.EVENT);
-        sessionData.get(FitSessionType.EVENTTYPE);
+//        sessionData.get(FitSessionType.EVENT);
+//        sessionData.get(FitSessionType.EVENTTYPE);
 
         Object val = sessionData.get(FitSessionType.AVGHR);
         if (val != null) {
@@ -94,39 +102,80 @@ public class FitWorkoutConverter extends WorkoutConverter {
 
         val = sessionData.get(FitSessionType.AVGSPEED);
         if (val != null) {
-            workout.getData().put("speedAvg", Double.valueOf((Integer) val));
+            workout.getData().put("speedAvg", (double) ((Integer) val / 1000));
         }
         val = sessionData.get(FitSessionType.MAXSPEED);
         if (val != null) {
-            workout.getData().put("speedMax", Double.valueOf((Integer) val));
+            workout.getData().put("speedMax", (double) ((Integer) val / 1000));
         }
 
         val = sessionData.get(FitSessionType.AVGCADENCE);
         if (val != null) {
-            workout.getData().put("cadenceAvg", Double.valueOf((Integer)val));
+            workout.getData().put("cadenceAvg", Double.valueOf((Integer) val));
         }
 
         val = sessionData.get(FitSessionType.ASCENT);
         if (val != null) {
-            workout.getData().put("elevationGain", Double.valueOf((Integer)val));
+            workout.getData().put("elevationGain", Double.valueOf((Integer) val));
         }
         val = sessionData.get(FitSessionType.DECENT);
         if (val != null) {
-            workout.getData().put("elevationLoss", Double.valueOf((Integer)val));
+            workout.getData().put("elevationLoss", Double.valueOf((Integer) val));
         }
 
 
         val = sessionData.get(FitSessionType.TOTALTIMERTIME);
         if (val != null) {
-            workout.getData().put("clockDuration", Double.valueOf((Long)val));
+            workout.getData().put("clockDuration", (double) ((Long) val / 1000));
         }
 
 //        workout.getData().put("totalDistance", summary.getDist());
 
         val = sessionData.get(FitSessionType.AVGPOWER);
         if (val != null) {
-            workout.getData().put("powerAvg", Double.valueOf((Integer)val));
+            workout.getData().put("powerAvg", Double.valueOf((Integer) val));
         }
+
+        val = sessionData.get(FitSessionType.TOTALDISTANCE);
+        if (val != null) {
+            workout.getData().put("totalDistance", (double) ((Integer) val / 100));
+        }
+
+        if (fitData.getLaps().size() > 0) {
+            Long totalDistance = 0L;
+            Long avgSpeed = 0L;
+//            Long ascent = 0L, descent = 0L;
+            int avgCnt = 0;
+            for (Map<Enum, Object> lap : fitData.getLaps()) {
+                val = lap.get(FitLapType.TOTAL_DISTANCE);
+                if (val != null) {
+                    totalDistance += (Long) val;
+                }
+
+                val = lap.get(FitLapType.AVG_SPEED);
+                if (val != null) {
+                    avgSpeed += (Integer) val;
+                    avgCnt++;
+                }
+
+//                val = lap.get(FitLapType.ASCENT);
+//                if(val != null){
+//                    ascent += (Integer)val;
+//                }
+//
+//                val = lap.get(FitLapType.DESCENT);
+//                if(val != null){
+//                    descent += (Integer)val;
+//                }
+            }
+
+            if (workout.getData().get("totalDistance") == null)
+                workout.getData().put("totalDistance", (double) (totalDistance / 100));
+
+            if (workout.getData().get("speedAvg") == null)
+                workout.getData().put("speedAvg", (double) avgSpeed / (avgCnt * 1000));
+        }
+
         return workout;
     }
 }

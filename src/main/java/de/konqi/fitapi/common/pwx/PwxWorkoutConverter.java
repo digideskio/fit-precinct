@@ -37,6 +37,10 @@ public class PwxWorkoutConverter extends WorkoutConverter {
                 put(dataMap, "distance", sample.getTimeoffset(), sample.getDist().toString());
             }
 
+            if(sample.getSpd() != null){
+                put(dataMap, "speed", sample.getTimeoffset(), sample.getSpd().toString());
+            }
+
             // heartrate
             if (sample.getHr() != null) {
                 put(dataMap, "heartrate", sample.getTimeoffset(), sample.getHr().toString());

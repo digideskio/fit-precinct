@@ -63,7 +63,7 @@
       <div class="box-body">
         <ul>
           <li ng-repeat="workout in ::latestWorkouts">
-            <a ui-sref="workout({id:workout.id})">{{workout.type}} on {{workout.startTime | momentFilter:'LLL'}} ({{workout.name}})
+            <a ui-sref="workout({id:workout.id})">{{workout.type}} on {{workout.startTime | momentFilter:'LLL'}} ({{workout.name || "unnamed workout"}})
             <small class="pull-right">{{workout.data.totalDistance/1000 | number:2 }} km, {{workout.data.clockDuration | momentFilter:'seconds':'duration':'hours'}}:{{workout.data.clockDuration | momentFilter:'seconds':'duration':'minutes'}} h</small></a>
           </li>
         </ul>

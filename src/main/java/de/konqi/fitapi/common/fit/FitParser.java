@@ -148,13 +148,13 @@ public class FitParser {
 
                             fitData.getData().get(fitDefinition.getGlobalMessageNumber()).put(timestamp, values);
                         } else {
-                            fitData.getMeta().put(fitDefinition.getGlobalMessageNumber(), values);
-//
-//                            if (!fitData.getMeta().containsKey(fitDefinition.getGlobalMessageNumber())) {
-//                                fitData.getMeta().put(fitDefinition.getGlobalMessageNumber(), new ArrayList<>());
-//                            }
-//
-//                            fitData.getMeta().get(fitDefinition.getGlobalMessageNumber()).add(values);
+                            switch (fitDefinition.getGlobalMessageNumber()){
+                                case LAP:
+                                    fitData.getLaps().add(values);
+                                    break;
+                                default:
+                                    fitData.getMeta().put(fitDefinition.getGlobalMessageNumber(), values);
+                            }
                         }
                     }
                 }
