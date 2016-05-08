@@ -1,5 +1,6 @@
 package de.konqi.fitapi.common.pwx;
 
+import de.konqi.fitapi.common.WorkoutConverter;
 import de.konqi.fitapi.db.domain.DataSet;
 import de.konqi.fitapi.db.domain.Workout;
 import de.konqi.fitapi.db.domain.WorkoutData;
@@ -10,7 +11,7 @@ import java.util.Map;
 /**
  * Created by konqi on 08.04.2016.
  */
-public class PwxWorkoutConverter {
+public class PwxWorkoutConverter extends WorkoutConverter {
     PwxFile pwxFile;
 
     public PwxWorkoutConverter(PwxFile pwxFile) {
@@ -93,20 +94,5 @@ public class PwxWorkoutConverter {
         workout.getData().put("powerAvg", summary.getPwr());
 
         return workout;
-    }
-
-    private void put(HashMap<String, WorkoutData> dataMap, String type, Long offset, String... data) {
-        if (data == null) return;
-
-        if (!dataMap.containsKey(type)) {
-            WorkoutData workoutData = new WorkoutData();
-            workoutData.setType(type);
-            dataMap.put(type, workoutData);
-        }
-
-        DataSet dataSet = new DataSet();
-        dataSet.setOffset(offset);
-        dataSet.setData(data);
-        dataMap.get(type).getDataSet().add(dataSet);
     }
 }
