@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.Properties;
 
 /**
@@ -36,7 +37,7 @@ public class MailHandlerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String requestURI = req.getRequestURI();
+        String requestURI = URLDecoder.decode(req.getRequestURI(), "UTF-8");
         log.info("Mail Handler Servlet, request path:" + requestURI);
         int from = requestURI.lastIndexOf('/') + 1;
         int to = requestURI.indexOf('@');
