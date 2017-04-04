@@ -74,7 +74,7 @@ public class MailHandlerServlet extends HttpServlet {
                     if (fileName != null && !fileName.isEmpty()) {
                         log.info("Filename: " + fileName);
                         if (fileName.toLowerCase().matches("^.*\\." + mailType.getExtension())) {
-                            log.info("Found PWX attachment. Attempting to import file for user with email '" + senderEmail + "'.");
+                            log.info("Found " + mailType.getExtension() + " attachment. Attempting to import file for user with email '" + senderEmail + "'.");
                             if (bodyPart.getContent() instanceof InputStream) {
                                 InputStream is = (InputStream) bodyPart.getContent();
                                 mailType.getImporter().importFromStream(senderEmail, is);

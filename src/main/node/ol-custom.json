@@ -16,7 +16,6 @@
     "ol.layer.Tile",
     "ol.source.Vector",
     "ol.source.OSM",
-    "ol.source.MapQuest",
 	"ol.source.BingMaps",
 	"ol.source.Stamen"
   ],

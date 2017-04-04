@@ -66,7 +66,7 @@
       });
     };
 
-    $scope.mapSource = olService.source.mapQuest;
+    $scope.mapSource = olService.source.osm;
 
     $scope.map = new olService.ol.Map({
       target: 'map',
